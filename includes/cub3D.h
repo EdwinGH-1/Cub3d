@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/12 14:37:35 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/16 11:23:50 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,36 @@
 # include <limits.h>
 # include <errno.h>
 # include <X11/keysym.h>
-# include "libft.h"
+# include <stdbool.h>
+# include "../libft/includes/libft.h"
 
 # define WIN_LEN 1920
 # define WIN_HEI 1080
 # define WIN_NAME "GAME OF THE YEAR"
 
+typedef struct s_pixel
+{
+	int	x;
+	int	y;
+	int	value;
+}	t_pixel;
+
+typedef struct s_texture
+{
+	char			*no;
+	char			*so;
+	char			*we;
+	char			*ea;
+	unsigned int	floor;
+	unsigned int	ceiling;
+}	t_texture;
+
 typedef struct s_map
 {
-	int	x_coor;
-	int	y_coor;
-	int	value;
+	t_pixel		**pixel;
+	t_texture	texture;
+	int			x_max;
+	int			y_max;
 }	t_map;
 
 typedef struct s_img
@@ -43,18 +62,12 @@ typedef struct s_img
 	int		endian;
 }	t_img;
 
-typedef struct t_vars
+typedef struct s_vars
 {
-	char			*tex_no;
-	char			*tex_so;
-	char			*tex_we;
-	char			*tex_ea;
-	unsigned int	col_floor;
-	unsigned int	col_ceil;
-	t_map			**map;
-	void			*mlx;
-	void			*win;
-	t_img			img;
+	void		*mlx;
+	void		*win;
+	t_img		img;
+	t_map		map;
 }	t_vars;
 
 #endif // !CUB3D_H
