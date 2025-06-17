@@ -6,25 +6,11 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:21 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/16 15:34:26 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:29:43 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3D.h"
-
-char	*grab_texture(char *str)
-{
-	int	i;
-	int	n;
-
-	i = -1;
-	while (ft_isspace(str[++i]))
-		;
-	n = i;
-	while (str[++n])
-		;
-	return (ft_substr(str, i, n - i + 1));
-}
+#include "../../includes/cub3D.h"
 
 bool	is_map(char *str)
 {
@@ -35,44 +21,76 @@ bool	is_map(char *str)
 	count = 0;
 	while (str[++i])
 	{
-		if (!ft_isdigit(str[i]))
-		{
-			if (!ft_isspace(str[i]))
-				return (false);
+		if (!ft_isspace(str[i]) && str[i] != '1' && str[i] != '0'
+			&& str[i] != 'N' && str[i] != 'S' && str[i] != 'E'
+			&& str[i] != 'W' && str[i] != 'D')
+			return (false);
+		if (ft_isspace(str[i]))
 			count++;
-		}
 	}
-	if (!count)
+	if (count == ft_strlen(str))
 		return (false);
 	return (true);
 }
 
-bool	set_bounds(char *file, t_map *map)
+bool	check_extension(char *file, char *extension)
+{
+	while (file && *file != *extension)
+		file++;
+	if (!file)
+		return (false);
+	if (ft_strcmp(file, extension))
+		return (false);
+	return (true);
+}
+
+int	map_pos(char *file)
 {
 	char	*str;
 	int		fd;
 	int		count;
+	int		pos;
 
+	count = 0;
+	pos = -1;
 	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		return (ft_putstr_fd("Invalid File\n", 2), false);
 	while (1)
 	{
 		str = get_next_line(fd);
-		if (!str || (map->y_max && !is_map(str)))
+		if (!str)
 			break ;
-		if (is_map(str))
+		count++;
+		if (is_str_space(str))
+			pos = count;
+		free(str);
+	}
+	return (pos + 1);
+}
+
+void	set_bounds(t_map *map, char *file)
+{
+	int		fd;
+	char	*str;
+	int		count;
+	int		pos;
+
+	fd = open(file, O_RDONLY);
+	pos = map_pos(file);
+	count = 0;
+	while (1)
+	{
+		str = get_next_line(fd);
+		if (!str || (count >= pos && is_str_space(str)))
+			break ;
+		count++;
+		if (count >= pos)
 		{
-			count = -1;
-			while (str[++count])
-				;
-			if (count > map->x_max)
-				map->x_max = count;
-			map->y_max++;
+			if (ft_strlen(str) > map->x_max)
+				map->x_max = ft_strlen(str);
 		}
 		free(str);
 	}
-	return (true);
+	map->y_max = count - pos + 1;
 }
 
 void	terminate(t_vars *vars)

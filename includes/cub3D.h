@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/16 11:23:50 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:45:59 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,15 @@ typedef struct s_vars
 	t_img		img;
 	t_map		map;
 }	t_vars;
+
+//		PARSE
+//	parse.c
+bool	parse_map(int argc, char **argv, t_vars *vars);
+
+//	parse_utils.c
+int		map_pos(char *file);
+void	set_bounds(t_map *map, char *file);
+void	terminate(t_vars *vars);
+bool	check_extension(char *file, char *extension);
 
 #endif // !CUB3D_H
