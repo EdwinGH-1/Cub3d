@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/17 15:45:59 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:55:28 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@
 
 typedef struct s_pixel
 {
-	int	x;
-	int	y;
-	int	value;
+	size_t	x;
+	size_t	y;
+	int		value;
 }	t_pixel;
 
 typedef struct s_texture
@@ -49,8 +49,8 @@ typedef struct s_map
 {
 	t_pixel		**pixel;
 	t_texture	texture;
-	int			x_max;
-	int			y_max;
+	size_t		x_max;
+	size_t		y_max;
 }	t_map;
 
 typedef struct s_img
@@ -75,9 +75,14 @@ typedef struct s_vars
 bool	parse_map(int argc, char **argv, t_vars *vars);
 
 //	parse_utils.c
-int		map_pos(char *file);
-void	set_bounds(t_map *map, char *file);
-void	terminate(t_vars *vars);
+bool	set_bounds(t_map *map, char *file);
+bool	is_map(char *str);
+void	memfree_array(void **array);
+void	free_texture(t_map *map);
+void	free_part(t_map *map, int y);
+
+//	parse_texture.c
 bool	check_extension(char *file, char *extension);
+int		set_textures(char *str, t_map *map);
 
 #endif // !CUB3D_H

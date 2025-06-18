@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:21 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/17 15:29:43 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/18 14:41:40 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool	is_map(char *str)
 {
-	int	i;
-	int	count;
+	int		i;
+	size_t	count;
 
 	i = -1;
 	count = 0;
@@ -23,7 +23,7 @@ bool	is_map(char *str)
 	{
 		if (!ft_isspace(str[i]) && str[i] != '1' && str[i] != '0'
 			&& str[i] != 'N' && str[i] != 'S' && str[i] != 'E'
-			&& str[i] != 'W' && str[i] != 'D')
+			&& str[i] != 'W' && str[i] != 'D' && str[i] != '\n')
 			return (false);
 		if (ft_isspace(str[i]))
 			count++;
@@ -33,80 +33,64 @@ bool	is_map(char *str)
 	return (true);
 }
 
-bool	check_extension(char *file, char *extension)
+bool	set_bounds(t_map *map, char *file)
 {
-	while (file && *file != *extension)
-		file++;
-	if (!file)
-		return (false);
-	if (ft_strcmp(file, extension))
-		return (false);
-	return (true);
-}
-
-int	map_pos(char *file)
-{
-	char	*str;
 	int		fd;
-	int		count;
-	int		pos;
+	char	*str;
 
-	count = 0;
-	pos = -1;
 	fd = open(file, O_RDONLY);
 	while (1)
 	{
 		str = get_next_line(fd);
 		if (!str)
 			break ;
-		count++;
-		if (is_str_space(str))
-			pos = count;
-		free(str);
-	}
-	return (pos + 1);
-}
-
-void	set_bounds(t_map *map, char *file)
-{
-	int		fd;
-	char	*str;
-	int		count;
-	int		pos;
-
-	fd = open(file, O_RDONLY);
-	pos = map_pos(file);
-	count = 0;
-	while (1)
-	{
-		str = get_next_line(fd);
-		if (!str || (count >= pos && is_str_space(str)))
-			break ;
-		count++;
-		if (count >= pos)
+		if (is_map(str))
 		{
 			if (ft_strlen(str) > map->x_max)
-				map->x_max = ft_strlen(str);
+				map->x_max = ft_strlen(str) - 1;
+			map->y_max++;
 		}
 		free(str);
 	}
-	map->y_max = count - pos + 1;
+	if (!map->x_max || !map->y_max)
+		return (false);
+	return (true);
 }
 
-void	terminate(t_vars *vars)
+void	free_part(t_map *map, int y)
 {
-	if (vars->map.pixel)
-		free(vars->map.pixel);
-	if (vars->map.texture.no)
-		free(vars->map.texture.no);
-	if (vars->map.texture.so)
-		free(vars->map.texture.so);
-	if (vars->map.texture.ea)
-		free(vars->map.texture.ea);
-	if (vars->map.texture.we)
-		free(vars->map.texture.we);
-	if (vars->map.texture.floor)
-		free(vars->map.texture.floor);
-	if (vars->map.texture.ceiling)
-		free(vars->map.texture.ceiling);
+	int	count;
+
+	count = 0;
+	while (count <= y)
+	{
+		free(map->pixel[count]);
+		count++;
+	}
+}
+
+void	memfree_array(void **array)
+{
+	int		i;
+	char	**str;
+
+	str = (char **)array;
+	i = -1;
+	while (str[++i])
+		free(str[i]);
+	free(str);
+}
+
+void	free_texture(t_map *map)
+{
+	if (map->texture.no)
+		free(map->texture.no);
+	if (map->texture.so)
+		free(map->texture.so);
+	if (map->texture.ea)
+		free(map->texture.ea);
+	if (map->texture.we)
+		free(map->texture.we);
+	if (map->pixel)
+		free(map->pixel);
 }

@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 12:27:07 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/16 10:08:28 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/18 08:57:31 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 // }					t_list;
 
 int		ft_atoi(const char *nptr);
+int		ft_atoi_base(const char *nptr, int base);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 int		ft_isalnum(int c);

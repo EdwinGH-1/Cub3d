@@ -6,29 +6,49 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 14:33:00 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/17 14:45:52 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/18 18:26:14 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-bool	grab_color(char *str, char **color)
+bool	check_extension(char *file, char *extension)
 {
-	int	r;
-	int	g;
-	int	b;
-	int	i;
+	int	count;
 
-	i = 0;
+	count = ft_strlen(extension);
+	while (*file)
+		file++;
+	while (*extension)
+		extension++;
+	while (--count)
+	{
+		if (*extension != *file)
+			return (false);
+		extension--;
+		file--;
+	}
+	return (true);
+}
+
+bool	grab_color(char *str, unsigned int *color)
+{
+	char	**colors;
+	int		r;
+	int		g;
+	int		b;
+
 	if (*color)
-		return (ft_putstr_fd("Invalid Map\n", 2), false);
+		return (ft_putstr_fd("Invalid Color\n", 2), false);
 	str++;
-	while (ft_isspace(*str))
+	while (*str && ft_isspace(*str))
 		str++;
-	while (str[i] != ',')
-		i++;
-	str[i] = '\0';
-	
+	colors = ft_split(str, ',');
+	r = ft_atoi(colors[0]);
+	g = ft_atoi(colors[1]);
+	b = ft_atoi(colors[2]);
+	*color = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+	memfree_array((void **)colors);
 	return (true);
 }
 
@@ -38,16 +58,16 @@ bool	grab_texture(char *str, char **texture)
 	int	n;
 
 	if (*texture)
-		return (ft_putstr_fd("Invalid Map\n", 2), false);
+		return (ft_putstr_fd("Invalid Texture\n", 2), false);
 	i = 1;
 	while (ft_isspace(str[++i]))
 		;
 	n = i;
-	while (str[++n])
-		;
-	*texture = ft_substr(str, i, n - i + 1);
-	if (!check_extension(texture, ".xlm"))
-		return (ft_putstr_fd("Invalid texture\n", 2), false);
+	while (str[n] && str[n] != '\n')
+		n++;
+	*texture = ft_substr(str, i, n - i);
+	if (!check_extension(*texture, ".xpm"))
+		return (ft_putstr_fd("Invalid texture type\n", 2), false);
 	return (true);
 }
 
@@ -57,11 +77,12 @@ int	set_textures(char *str, t_map *map)
 		&& map->texture.no && map->texture.so
 		&& map->texture.we && map->texture.ea)
 		return (0);
-	if ((!ft_strcmp(str, "NO") && !grab_texture(str, &map->texture.no))
-		|| (!ft_strcmp(str, "SO") && !grab_texture(str, &map->texture.so))
-		|| (!ft_strcmp(str, "EA") && !grab_texture(str, &map->texture.ea))
-		|| (!ft_strcmp(str, "WE") && !grab_texture(str, &map->texture.we))
-		|| (!ft_strcmp(str, "F") && !grab_color(str, &map->texture.floor))
-		|| (!ft_strcmp(str, "C") && !grab_color(str, &map->texture.ceiling)))
-		return (-1);
+	if ((!ft_strncmp(str, "NO ", 3) && !grab_texture(str, &map->texture.no))
+		|| (!ft_strncmp(str, "SO ", 3) && !grab_texture(str, &map->texture.so))
+		|| (!ft_strncmp(str, "EA ", 3) && !grab_texture(str, &map->texture.ea))
+		|| (!ft_strncmp(str, "WE ", 3) && !grab_texture(str, &map->texture.we))
+		|| (!ft_strncmp(str, "C", 1) && !grab_color(str, &map->texture.ceiling))
+		|| (!ft_strncmp(str, "F", 1) && !grab_color(str, &map->texture.floor)))
+		return (free_texture(map), -1);
+	return (1);
 }
