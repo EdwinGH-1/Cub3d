@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/18 17:55:28 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:55:50 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,26 @@
 # include <errno.h>
 # include <X11/keysym.h>
 # include <stdbool.h>
+# include "../minilibx-linux/mlx.h"
 # include "../libft/includes/libft.h"
 
-# define WIN_LEN 1920
-# define WIN_HEI 1080
-# define WIN_NAME "GAME OF THE YEAR"
+# define WINX 1920
+# define WINY 1080
+
+# define MOVE 5
+
+# define P_COLOR 0xFF0000
+# define P_SIZE 10
+# define MINI_RAD 300
+# define MINI_BORDER 0x228B22
+# define MINI_POS 40
+# define MINI_SIZE 30
 
 typedef struct s_pixel
 {
-	size_t	x;
-	size_t	y;
-	int		value;
+	int	x;
+	int	y;
+	int	value;
 }	t_pixel;
 
 typedef struct s_texture
@@ -49,30 +58,56 @@ typedef struct s_map
 {
 	t_pixel		**pixel;
 	t_texture	texture;
-	size_t		x_max;
-	size_t		y_max;
+	int			x_max;
+	int			y_max;
+	int			x_offset;
+	int			y_offset;
 }	t_map;
 
-typedef struct s_img
+typedef struct s_state
+{
+	bool	key_w;
+	bool	key_a;
+	bool	key_s;
+	bool	key_d;
+	bool	key_r;
+	bool	key_l;
+}	t_state;
+
+typedef struct s_player
+{
+	double	angle;
+	double	plane_x;
+	double	plane_y;
+	t_pixel	target;
+	t_pixel	pos;
+}	t_player;
+
+typedef struct s_bitmap
 {
 	void	*img;
 	char	*addr;
-	int		bbp;
-	int		line_size;
+	int		bpp;
+	int		line_length;
 	int		endian;
-}	t_img;
+}	t_bitmap;
 
-typedef struct s_vars
+typedef struct s_meta
 {
 	void		*mlx;
 	void		*win;
-	t_img		img;
+	t_bitmap	bitmap;
 	t_map		map;
-}	t_vars;
+	t_player	player;
+}	t_meta;
+
+//		CUB3D
+void	my_mlx_pixel_put(t_meta *meta, int x, int y, unsigned int color);
+void	render_minimap(t_meta *meta);
 
 //		PARSE
 //	parse.c
-bool	parse_map(int argc, char **argv, t_vars *vars);
+bool	parse_map(int argc, char **argv, t_meta *meta);
 
 //	parse_utils.c
 bool	set_bounds(t_map *map, char *file);
@@ -84,5 +119,21 @@ void	free_part(t_map *map, int y);
 //	parse_texture.c
 bool	check_extension(char *file, char *extension);
 int		set_textures(char *str, t_map *map);
+
+//		HOOK
+//	hook.c
+int		render_image(void *data);
+int		terminate(t_meta *meta);
+int		handle_key(int keysym, t_meta *meta);
+
+//		DRAW
+//	draw_map.c
+void	draw_player(t_meta *meta);
+void	draw_circle(t_meta *meta);
+void	draw_grid(t_meta *meta, t_pixel pixel, int count_x, int count_y);
+bool	in_circle(int x, int y);
+
+//	draw_line.c
+void	draw_line(t_meta *meta);
 
 #endif // !CUB3D_H

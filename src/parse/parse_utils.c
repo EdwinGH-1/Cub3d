@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:21 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/18 14:41:40 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:49:38 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ bool	set_bounds(t_map *map, char *file)
 			break ;
 		if (is_map(str))
 		{
-			if (ft_strlen(str) > map->x_max)
+			if ((int)ft_strlen(str) > map->x_max)
 				map->x_max = ft_strlen(str) - 1;
 			map->y_max++;
 		}

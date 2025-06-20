@@ -6,17 +6,17 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:12:09 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/18 18:21:26 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:49:09 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-bool	check_start(t_map *map)
+bool	check_start(t_map *map, t_pixel *pos)
 {
-	size_t	start;
-	size_t	x;
-	size_t	y;
+	int	start;
+	int	x;
+	int	y;
 
 	y = 0;
 	start = 0;
@@ -28,7 +28,10 @@ bool	check_start(t_map *map)
 			if (map->pixel[y][x].value == 'N' || map->pixel[y][x].value == 'S'
 				|| map->pixel[y][x].value == 'E'
 				|| map->pixel[y][x].value == 'W')
+			{
 				start++;
+				*pos = map->pixel[y][x];
+			}
 			x++;
 		}
 		y++;
@@ -38,7 +41,7 @@ bool	check_start(t_map *map)
 	return (true);
 }
 
-bool	check_row(t_pixel *pixel, t_map *map)
+bool	check_row(t_pixel *pixel, t_map *map, t_pixel *pos)
 {
 	int	x1;
 	int	x2;
@@ -57,7 +60,7 @@ bool	check_row(t_pixel *pixel, t_map *map)
 			if (!pixel[x1].value)
 				return (false);
 	}
-	if (pixel[x1].y == map->y_max - 1 && !check_start(map))
+	if (pixel[x1].y == map->y_max - 1 && !check_start(map, pos))
 		return (false);
 	return (true);
 }
@@ -79,15 +82,15 @@ bool	basic_check(t_map *map, int *fd, char *file, int argc)
 	return (true);
 }
 
-bool	set_map(char *str, t_map *map, int y)
+bool	set_map(char *str, t_map *map, int y, t_pixel *pos)
 {
-	size_t	x;
+	int	x;
 
 	x = 0;
 	map->pixel[y] = malloc(map->x_max * (sizeof(t_pixel)));
 	while (x < map->x_max)
 	{
-		if (x >= ft_strlen(str) || ft_isspace(str[x]))
+		if (x >= (int)ft_strlen(str) || ft_isspace(str[x]))
 			map->pixel[y][x].value = -1;
 		else if (ft_isdigit(str[x]))
 			map->pixel[y][x].value = str[x] - '0';
@@ -97,21 +100,21 @@ bool	set_map(char *str, t_map *map, int y)
 		map->pixel[y][x].y = y;
 		x++;
 	}
-	if (!check_row(map->pixel[y], map))
+	if (!check_row(map->pixel[y], map, pos))
 		return (free_part(map, y), free_texture(map),
 			ft_putstr_fd("Invalid Map Format\n", 2), false);
 	return (true);
 }
 
-bool	parse_map(int argc, char **argv, t_vars *vars)
+bool	parse_map(int argc, char **argv, t_meta *meta)
 {
 	char	*str;
 	int		fd;
 	int		is_texture;
-	size_t	y;
+	int		y;
 
-	ft_memset(vars, 0, sizeof(t_vars));
-	if (!basic_check(&vars->map, &fd, argv[1], argc))
+	ft_memset(meta, 0, sizeof(t_meta));
+	if (!basic_check(&meta->map, &fd, argv[1], argc))
 		return (false);
 	y = 0;
 	while (1)
@@ -119,10 +122,10 @@ bool	parse_map(int argc, char **argv, t_vars *vars)
 		str = get_next_line(fd);
 		if (!str)
 			break ;
-		is_texture = set_textures(str, &vars->map);
-		if (!is_texture && y < vars->map.y_max && is_map(str))
+		is_texture = set_textures(str, &meta->map);
+		if (!is_texture && y < meta->map.y_max && is_map(str))
 		{
-			if (!set_map(str, &vars->map, y++))
+			if (!set_map(str, &meta->map, y++, &meta->player.pos))
 				return (free(str), false);
 		}
 		else if (is_texture == -1)
