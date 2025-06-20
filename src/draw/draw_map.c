@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:35:32 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 14:58:41 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/20 15:48:14 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	draw_circle(t_meta *meta)
 
 void	draw_grid(t_meta *meta, t_pixel pixel, int count_x, int count_y)
 {
-	bool	is_wall;
 	int		val_x;
 	int		val_y;
 
@@ -84,12 +83,38 @@ void	draw_grid(t_meta *meta, t_pixel pixel, int count_x, int count_y)
 	val_y = pixel.y * MINI_SIZE + count_y + meta->map.y_offset;
 	if (in_circle(val_x, val_y))
 	{
-		is_wall = false;
-		if (pixel.value == 1 || pixel.value == -1)
-			is_wall = true;
-		if (count_x == MINI_SIZE - 1 || count_y == MINI_SIZE - 1)
+		if (count_x == MINI_SIZE - 1 || count_y == MINI_SIZE - 1
+			|| count_x == 0 || count_y == 0)
 			my_mlx_pixel_put(meta, val_x, val_y, MINI_BORDER);
-		else if (!is_wall)
+		else if (pixel.value != 1 && pixel.value != -1)
 			my_mlx_pixel_put(meta, val_x, val_y, 0xffffff);
+	}
+}
+
+void	render_minimap(t_meta *meta)
+{
+	int	x;
+	int	y;
+	int	count_x;
+	int	count_y;
+
+	y = 0;
+	while (y < meta->map.y_max)
+	{
+		x = 0;
+		while (x < meta->map.x_max)
+		{
+			count_y = 0;
+			while (count_y < MINI_SIZE)
+			{
+				count_x = 0;
+				while (count_x < MINI_SIZE)
+					draw_grid(meta,
+						meta->map.pixel[y][x], count_x++, count_y);
+				count_y++;
+			}
+			x++;
+		}
+		y++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/20 14:55:50 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/20 16:20:07 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include "../minilibx-linux/mlx.h"
 # include "../libft/includes/libft.h"
 
+//-----------------------------CUB3D MACROS------------------------------------
+
 # define WINX 1920
 # define WINY 1080
 
@@ -32,10 +34,12 @@
 
 # define P_COLOR 0xFF0000
 # define P_SIZE 10
-# define MINI_RAD 300
+# define MINI_RAD 500
 # define MINI_BORDER 0x228B22
-# define MINI_POS 40
+# define MINI_POS 100
 # define MINI_SIZE 30
+
+//-----------------------------CUB3D STRUCTURES--------------------------------
 
 typedef struct s_pixel
 {
@@ -101,39 +105,41 @@ typedef struct s_meta
 	t_player	player;
 }	t_meta;
 
-//		CUB3D
-void	my_mlx_pixel_put(t_meta *meta, int x, int y, unsigned int color);
-void	render_minimap(t_meta *meta);
+//-----------------------------CUB3D FUNCTIONS---------------------------------
 
 //		PARSE
 //	parse.c
-bool	parse_map(int argc, char **argv, t_meta *meta);
+bool			parse_map(int argc, char **argv, t_meta *meta);
 
 //	parse_utils.c
-bool	set_bounds(t_map *map, char *file);
-bool	is_map(char *str);
-void	memfree_array(void **array);
-void	free_texture(t_map *map);
-void	free_part(t_map *map, int y);
+bool			set_bounds(t_map *map, char *file);
+bool			is_map(char *str);
+void			memfree_array(void **array);
+void			free_texture(t_map *map);
+void			free_part(t_map *map, int y);
 
 //	parse_texture.c
-bool	check_extension(char *file, char *extension);
-int		set_textures(char *str, t_map *map);
+bool			check_extension(char *file, char *extension);
+int				set_textures(char *str, t_map *map);
 
 //		HOOK
 //	hook.c
-int		render_image(void *data);
-int		terminate(t_meta *meta);
-int		handle_key(int keysym, t_meta *meta);
+int				render_image(void *data);
+int				terminate(t_meta *meta);
+int				handle_key(int keysym, t_meta *meta);
 
 //		DRAW
 //	draw_map.c
-void	draw_player(t_meta *meta);
-void	draw_circle(t_meta *meta);
-void	draw_grid(t_meta *meta, t_pixel pixel, int count_x, int count_y);
-bool	in_circle(int x, int y);
+void			draw_player(t_meta *meta);
+void			draw_circle(t_meta *meta);
+void			draw_grid(t_meta *meta, t_pixel pixel,
+					int count_x, int count_y);
+void			render_minimap(t_meta *meta);
 
 //	draw_line.c
-void	draw_line(t_meta *meta);
+void			draw_line(t_meta *meta);
+void			my_mlx_pixel_put(t_meta *meta, int x, int y,
+					unsigned int color);
+unsigned int	get_pixel(t_meta *meta, int x, int y);
 
 #endif // !CUB3D_H

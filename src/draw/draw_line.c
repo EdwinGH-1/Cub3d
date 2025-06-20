@@ -6,11 +6,35 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:32:29 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 14:33:03 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/20 16:32:25 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
+
+unsigned int	get_pixel(t_meta *meta, int x, int y)
+{
+	char	*dst;
+
+	if (y > WINY || y < 0 || x > WINX || x < 0)
+		return (0);
+	dst = meta->bitmap.addr
+		+ ((x * meta->bitmap.bpp / 8)
+			+ (y * meta->bitmap.line_length));
+	return (*(unsigned int *)dst);
+}
+
+void	my_mlx_pixel_put(t_meta *meta, int x, int y, unsigned int color)
+{
+	char	*dst;
+
+	if (y > WINY || y < 0 || x > WINX || x < 0)
+		return ;
+	dst = meta->bitmap.addr
+		+ ((x * meta->bitmap.bpp / 8)
+			+ (y * meta->bitmap.line_length));
+	*(unsigned int *)dst = color;
+}
 
 static void	gradient_less_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 {
