@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raycast.c                                          :+:      :+:    :+:   */
+/*   init_ray.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 13:54:01 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/19 13:54:48 by jothomas         ###   ########.fr       */
+/*   Created: 2025/06/18 13:18:53 by jthiew            #+#    #+#             */
+/*   Updated: 2025/06/18 13:18:55 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3D.h"
+#include "cub3D.h"
 
-void	raycast(t_meta *meta)
+void	init_ray_data(t_vars *vars, t_ray *ray)
 {
-	
+	ray->start_ang = vars->player.dir - ((FOV_ANG / 2.0) * M_PI / 180.0f);
+	ray->end_ang = vars->player.dir + ((FOV_ANG / 2.0) * M_PI / 180.0f);
 }

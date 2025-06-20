@@ -6,30 +6,30 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 14:33:00 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/18 18:26:14 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/20 21:01:22 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+#include "cub3D.h"
 
-bool	check_extension(char *file, char *extension)
-{
-	int	count;
-
-	count = ft_strlen(extension);
-	while (*file)
-		file++;
-	while (*extension)
-		extension++;
-	while (--count)
-	{
-		if (*extension != *file)
-			return (false);
-		extension--;
-		file--;
-	}
-	return (true);
-}
+// bool	check_extension(char *file, char *extension)
+// {
+// 	int	count;
+//
+// 	count = ft_strlen(extension);
+// 	while (*file)
+// 		file++;
+// 	while (*extension)
+// 		extension++;
+// 	while (--count)
+// 	{
+// 		if (*extension != *file)
+// 			return (false);
+// 		extension--;
+// 		file--;
+// 	}
+// 	return (true);
+// }
 
 bool	grab_color(char *str, unsigned int *color)
 {
@@ -73,9 +73,9 @@ bool	grab_texture(char *str, char **texture)
 
 int	set_textures(char *str, t_map *map)
 {
-	if (map->texture.ceiling && map->texture.floor
-		&& map->texture.no && map->texture.so
-		&& map->texture.we && map->texture.ea)
+	if (map->texture.ceiling != 0 && map->texture.floor != 0
+		&& map->texture.no != NULL && map->texture.so != NULL
+		&& map->texture.we != NULL && map->texture.ea != NULL)
 		return (0);
 	if ((!ft_strncmp(str, "NO ", 3) && !grab_texture(str, &map->texture.no))
 		|| (!ft_strncmp(str, "SO ", 3) && !grab_texture(str, &map->texture.so))
