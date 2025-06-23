@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:37:18 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 16:31:17 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/23 12:47:35 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,22 @@ int	terminate(t_meta *meta)
 
 bool	collision_check(t_meta *meta)
 {
-	int	x;
-	int	y;
+	int	grid_x;
+	int	grid_y;
 
-	x = MINI_RAD + MINI_POS;
-	y = MINI_RAD + MINI_POS;
-	if (get_pixel(meta, x + P_SIZE, y + P_SIZE) == 0
-		|| get_pixel(meta, x + P_SIZE, y) == 0
-		|| get_pixel(meta, x, y + P_SIZE) == 0
-		|| get_pixel(meta, x + P_SIZE, y + P_SIZE) == 0)
+	grid_x = (MINI_RAD + MINI_POS - meta->map.x_offset)
+		/ MINI_SIZE;
+	grid_y = (MINI_RAD + MINI_POS - meta->map.y_offset)
+		/ MINI_SIZE;
+	if (meta->map.pixel[grid_y][grid_x].value == 1
+		|| meta->map.pixel[grid_y][grid_x].value == -1)
+		return (false);
+	grid_x = (MINI_RAD + MINI_POS - meta->map.x_offset - P_SIZE / 2)
+		/ MINI_SIZE;
+	grid_y = (MINI_RAD + MINI_POS - meta->map.y_offset - P_SIZE / 2)
+		/ MINI_SIZE;
+	if (meta->map.pixel[grid_y][grid_x].value == 1
+		|| meta->map.pixel[grid_y][grid_x].value == -1)
 		return (false);
 	return (true);
 }

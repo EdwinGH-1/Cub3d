@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:35:32 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 15:48:14 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:52:18 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,46 @@ void	draw_player(t_meta *meta)
 		}
 		count_y++;
 	}
+}
+
+bool	set_point(t_meta *meta, t_pixel *current)
+{
+	int		d1;
+	int		d2;
+	t_pixel	tmp;
+
+	tmp = *current;
+	d1 = ((current->x / MINI_SIZE * MINI_SIZE) + MINI_SIZE - current->x)
+		/ meta->player.dir_x;
+	d2 = ((current->y / MINI_SIZE * MINI_SIZE) - current->y)
+		/ meta->player.dir_y;
+	if (d1 < d2)
+	{
+		tmp.x = current->x + d1;
+		tmp.y = current->y + sqrt(d1 * d1 - tmp.x * tmp.x);
+	}
+	else
+	{
+		tmp.y = current->y + d2;
+		tmp.x = current->x + sqrt(d2 * d2 - tmp.y * tmp.y);
+	}
+	*current = tmp;
+	return (true);
+}
+
+void	draw_ray(t_meta *meta)
+{
+	t_pixel	current;
+
+	meta->player.pos.x = MINI_POS + MINI_RAD - meta->map.x_offset;
+	meta->player.pos.y = MINI_POS + MINI_RAD - meta->map.y_offset;
+	current = meta->player.pos;
+	while (1)
+	{
+		set_point(meta, &current);
+	}
+	meta->player.target = current;
+	draw_line(meta);
 }
 
 void	draw_circle(t_meta *meta)

@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:12:09 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 14:49:09 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:50:42 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ bool	check_start(t_map *map, t_pixel *pos)
 				|| map->pixel[y][x].value == 'W')
 			{
 				start++;
-				*pos = map->pixel[y][x];
+				map->x_offset -= x * MINI_SIZE
+					- MINI_RAD - MINI_POS + (MINI_SIZE / 2);
+				map->y_offset -= y * MINI_SIZE
+					- MINI_RAD - MINI_POS + (MINI_SIZE / 2);
 			}
 			x++;
 		}

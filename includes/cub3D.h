@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/20 16:20:07 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/23 13:27:47 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,18 @@
 # define WINX 1920
 # define WINY 1080
 
-# define MOVE 5
-
-# define P_COLOR 0xFF0000
-# define P_SIZE 10
 # define MINI_RAD 500
 # define MINI_BORDER 0x228B22
 # define MINI_POS 100
 # define MINI_SIZE 30
+
+# define P_COLOR 0xFF0000
+# define P_SIZE 10
+# define P_FOV 66
+
+# define N_RAY 10
+
+# define MOVE 5
 
 //-----------------------------CUB3D STRUCTURES--------------------------------
 
@@ -80,7 +84,8 @@ typedef struct s_state
 
 typedef struct s_player
 {
-	double	angle;
+	double	dir_x;
+	double	dir_y;
 	double	plane_x;
 	double	plane_y;
 	t_pixel	target;
