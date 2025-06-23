@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:35:32 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/23 15:52:18 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/23 21:32:21 by joshua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,31 +43,6 @@ void	draw_player(t_meta *meta)
 		}
 		count_y++;
 	}
-}
-
-bool	set_point(t_meta *meta, t_pixel *current)
-{
-	int		d1;
-	int		d2;
-	t_pixel	tmp;
-
-	tmp = *current;
-	d1 = ((current->x / MINI_SIZE * MINI_SIZE) + MINI_SIZE - current->x)
-		/ meta->player.dir_x;
-	d2 = ((current->y / MINI_SIZE * MINI_SIZE) - current->y)
-		/ meta->player.dir_y;
-	if (d1 < d2)
-	{
-		tmp.x = current->x + d1;
-		tmp.y = current->y + sqrt(d1 * d1 - tmp.x * tmp.x);
-	}
-	else
-	{
-		tmp.y = current->y + d2;
-		tmp.x = current->x + sqrt(d2 * d2 - tmp.y * tmp.y);
-	}
-	*current = tmp;
-	return (true);
 }
 
 void	draw_ray(t_meta *meta)
@@ -126,7 +101,9 @@ void	draw_grid(t_meta *meta, t_pixel pixel, int count_x, int count_y)
 		if (count_x == MINI_SIZE - 1 || count_y == MINI_SIZE - 1
 			|| count_x == 0 || count_y == 0)
 			my_mlx_pixel_put(meta, val_x, val_y, MINI_BORDER);
-		else if (pixel.value != 1 && pixel.value != -1)
+		else if (pixel.value == 1 || pixel.value == -1)
+			my_mlx_pixel_put(meta, val_x, val_y, 0);		
+		else
 			my_mlx_pixel_put(meta, val_x, val_y, 0xffffff);
 	}
 }

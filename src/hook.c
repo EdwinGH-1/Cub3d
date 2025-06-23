@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hook.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:37:18 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/23 12:47:35 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:20:50 by joshua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ int	handle_key(int keysym, t_meta *meta)
 	offset[0] = meta->map.x_offset;
 	offset[1] = meta->map.y_offset;
 	if (keysym == XK_w)
-		meta->map.y_offset += MOVE;
+		meta->map.y_offset += P_MOVE;
 	if (keysym == XK_s)
-		meta->map.y_offset -= MOVE;
+		meta->map.y_offset -= P_MOVE;
 	if (keysym == XK_a)
-		meta->map.x_offset += MOVE;
+		meta->map.x_offset += P_MOVE;
 	if (keysym == XK_d)
-		meta->map.x_offset -= MOVE;
+		meta->map.x_offset -= P_MOVE;
 	if (keysym == XK_Escape)
 		terminate(meta);
 	if (!collision_check(meta))

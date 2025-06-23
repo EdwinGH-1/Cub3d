@@ -12,7 +12,7 @@ LIBFT = $(NAME_LIBFT)/libft.a
 
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g
-2FLAGS = -lXext -lX11 -lm
+2FLAGS = -Lminilibx-linux -lmlx_Linux -lXext -lX11 -lm -lz -lXrandr -lXrender -lbsd
 RM = rm -rf
 
 GREEN = \033[0;32m
@@ -32,7 +32,7 @@ $(OBJDIR):
 	@echo "$(GREEN)creating object files....$(RESET)"
 
 $(NAME): $(OBJS) $(LIBFT) $(MINILIBX)
-	@$(CC) $(FLAGS) $(2FLAGS) $(OBJS) $(LIBFT) $(MINILIBX) -o $(NAME) > /dev/null 2>&1
+	@$(CC) $(OBJS) $(FLAGS) $(2FLAGS) $(LIBFT) $(MINILIBX) -o $(NAME)
 	@echo "$(GREEN)$(NAME) created$(RESET)"
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
