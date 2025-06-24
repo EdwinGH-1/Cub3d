@@ -6,22 +6,35 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 19:47:11 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/20 18:08:03 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/24 16:48:44 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
+void	ft_free_split(char **split)
+{
+	int	i;
+
+	i = 0;
+	while (split[i] != NULL)
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}
+
 void	free_textures(t_vars *vars, t_texture *texture)
 {
-	if (texture->no != NULL)
-		free(texture->no);
-	if (texture->so != NULL)
-		free(texture->so);
-	if (texture->we != NULL)
-		free(texture->we);
-	if (texture->ea != NULL)
-		free(texture->ea);
+	if (texture->no_tex.path != NULL)
+		free(texture->no_tex.path);
+	if (texture->so_tex.path != NULL)
+		free(texture->so_tex.path);
+	if (texture->we_tex.path != NULL)
+		free(texture->we_tex.path);
+	if (texture->ea_tex.path != NULL)
+		free(texture->ea_tex.path);
 	if (texture->no_tex.img != NULL)
 		mlx_destroy_image(vars->mlx, texture->no_tex.img);
 	if (texture->so_tex.img != NULL)
@@ -64,7 +77,7 @@ void	free_mlx(t_vars *vars)
 
 void	delete_and_free_vars(t_vars *vars)
 {
-	free_textures(vars, &vars->map.texture);
+	free_textures(vars, &vars->texture);
 	free_map(vars);
 	free_mlx(vars);
 }

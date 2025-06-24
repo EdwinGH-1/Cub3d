@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:18:14 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/20 18:05:25 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/24 18:20:56 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,16 +234,16 @@ void	cast_ray(t_vars *vars, int screen_x)
 	if (side == 0)
 	{
 		if (ray.dir_x > 0)
-			tex = &vars->map.texture.we_tex;
+			tex = &vars->texture.we_tex;
 		else
-			tex = &vars->map.texture.ea_tex;
+			tex = &vars->texture.ea_tex;
 	}
 	else
 	{
 		if (ray.dir_y > 0)
-			tex = &vars->map.texture.no_tex;
+			tex = &vars->texture.no_tex;
 		else
-			tex = &vars->map.texture.so_tex;
+			tex = &vars->texture.so_tex;
 	}
 	
 	
@@ -297,7 +297,7 @@ int	game_loop(t_vars *vars)
 	handle_movement(vars);
 	handle_rotation(vars);
 	init_ray_data(vars, &vars->ray);
-	clear_background(vars, 0x87CEEB, 0x3E2F1C);
+	clear_background(vars, vars->texture.ceiling.color, vars->texture.floor.color);
 	draw_raycasting(vars);
 	draw_map(vars);
 	draw_fov(vars, vars->ray);

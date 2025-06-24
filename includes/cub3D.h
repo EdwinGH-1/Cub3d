@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/20 20:03:44 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/24 21:06:41 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_point
 
 typedef struct s_tex_img
 {
+	char	*path;
 	void	*img;
 	char	*addr;
 	int		width;
@@ -59,24 +60,28 @@ typedef struct s_tex_img
 	int		endian;
 }	t_tex_img;
 
+typedef struct s_surface
+{
+	int				r;
+	int				g;
+	int				b;
+	unsigned int	color;
+	bool			is_set;
+}	t_surface;
+
 typedef struct s_texture
 {
 	t_tex_img		no_tex;
 	t_tex_img		so_tex;
 	t_tex_img		we_tex;
 	t_tex_img		ea_tex;
-	char			*no;
-	char			*so;
-	char			*we;
-	char			*ea;
-	unsigned int	floor;
-	unsigned int	ceiling;
+	t_surface		floor;
+	t_surface		ceiling;
 }	t_texture;
 
 typedef struct s_map
 {
 	t_point		**point;
-	t_texture	texture;
 	int			x_max;
 	int			y_max;
 }	t_map;
@@ -149,26 +154,44 @@ typedef struct s_vars
 	t_ray			ray;
 	t_key_state		key_state;
 	t_minimap		minimap;
+	t_texture		texture;
 }	t_vars;
 
-//-----------------------------CUB3D FUNCTIONS---------------------------------
+// ----------------------------CUB3D FUNCTIONS---------------------------------
 
-//		PARSE
-//	parse.c
-bool	parse_file(char **argv, t_vars *vars);
+// --------------PARSING---------------
+// parse.c
+void	parse_file(char **argv, t_vars *vars);
 
-//	parse_utils.c
-bool	set_bounds(t_map *map, char *file);
+// parse_utils.c
+bool	is_valid_extension(char *filename, char *extension);
+bool	is_valid_file(char *file);
+
+// parse_color.c
+void	get_color_data(t_vars *vars, int fd, int *is_err);
+
+// parse_color_utils.c
+bool	is_valid_color(char *str, bool is_set, int *is_err);
+bool	is_valid_color_range(t_surface *surface, int *is_err);
+
+// parse_map.c
+void	parse_map_values(t_vars *vars, t_map *map, char *file);
+void	parse_map_size(t_vars *vars, t_map *map, char *file);
+
+// parse_map_utils.c
+bool	is_valid_map(t_map *map);
+bool	is_valid_player(t_map *map);
 bool	is_map(char *str);
-void	memfree_array(void **array);
-void	free_texture(t_map *map);
-void	free_part(t_map *map, int y);
+bool	is_texture_filled(t_texture tex);
+void	init_map_points(t_vars *vars, t_map *map);
 
-//	parse_texture.c
-bool	check_extension(char *file, char *extension);
-int		set_textures(char *str, t_map *map);
+// parse_texture.c
+void	get_texture_data(t_vars *vars, int fd, int *is_err);
 
-void	get_map(t_vars *vars);
+// parse_texture_utils.c
+char	*ft_strndup(char *str, int len);
+bool	is_valid_texture(char *str, t_tex_img *tex_img, int *is_err);
+// ------------END PARSING-------------
 
 // draw.c
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
@@ -178,6 +201,7 @@ void	draw_fov(t_vars *vars, t_ray ray);
 
 // free.c
 void	delete_and_free_vars(t_vars *vars);
+void	ft_free_split(char **split);
 
 // loop.c
 int		game_loop(t_vars *vars);

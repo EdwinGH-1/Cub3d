@@ -17,8 +17,13 @@ SRCS = $(addprefix $(SRCS_DIR), $(SRCS_LIST))
 SRCS_LIST =	 					\
 			cub3d.c					\
 			parse.c					\
+			parse_color.c			\
+			parse_color_utils.c		\
+			parse_map.c				\
+			parse_map_utils.c		\
 			parse_utils.c			\
 			parse_texture.c			\
+			parse_texture_utils.c	\
 			draw.c					\
 			free.c					\
 			hooks.c					\
@@ -52,7 +57,6 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)%.c
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS_DIR) $(OBJS_PATH) $(MLX)
-	# @$(CC) $(CFLAGS) $(CFLAGS2) $(OBJS_PATH) $(LIBFT) $(MLX) -Lminilibx-linux -o $(NAME) > /dev/null 2>&1
 	@$(CC) $(CFLAGS) $(CFLAGS2) $(OBJS_PATH) $(LIBFT) $(MLX) -Lminilibx-linux -o $(NAME)
 	@echo "$(GREEN)$(NAME) created$(RESET)"
 

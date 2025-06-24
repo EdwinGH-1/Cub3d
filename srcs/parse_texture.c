@@ -3,86 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   parse_texture.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 14:33:00 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 21:01:22 by jthiew           ###   ########.fr       */
+/*   Created: 2025/06/24 17:03:54 by jthiew            #+#    #+#             */
+/*   Updated: 2025/06/24 20:58:24 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-// bool	check_extension(char *file, char *extension)
-// {
-// 	int	count;
-//
-// 	count = ft_strlen(extension);
-// 	while (*file)
-// 		file++;
-// 	while (*extension)
-// 		extension++;
-// 	while (--count)
-// 	{
-// 		if (*extension != *file)
-// 			return (false);
-// 		extension--;
-// 		file--;
-// 	}
-// 	return (true);
-// }
-
-bool	grab_color(char *str, unsigned int *color)
+void	get_texture_path(char *str, t_tex_img *tex_img, int *is_err)
 {
-	char	**colors;
-	int		r;
-	int		g;
-	int		b;
-
-	if (*color)
-		return (ft_putstr_fd("Invalid Color\n", 2), false);
-	str++;
-	while (*str && ft_isspace(*str))
+	if (is_valid_texture(str, tex_img, is_err) == false)
+		return ;
+	while (ft_isspace(*str) == 1)
 		str++;
-	colors = ft_split(str, ',');
-	r = ft_atoi(colors[0]);
-	g = ft_atoi(colors[1]);
-	b = ft_atoi(colors[2]);
-	*color = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-	memfree_array((void **)colors);
-	return (true);
+	tex_img->path = ft_strndup(str, ft_strlen(str) - 1);
+	if (tex_img->path == NULL)
+	{
+		ft_putstr_fd("Error strdup\n", 2);
+		*is_err = 1;
+	}
 }
 
-bool	grab_texture(char *str, char **texture)
+void	set_texture(char *str, t_texture *tex, int *is_err)
 {
-	int	i;
-	int	n;
-
-	if (*texture)
-		return (ft_putstr_fd("Invalid Texture\n", 2), false);
-	i = 1;
-	while (ft_isspace(str[++i]))
-		;
-	n = i;
-	while (str[n] && str[n] != '\n')
-		n++;
-	*texture = ft_substr(str, i, n - i);
-	if (!check_extension(*texture, ".xpm"))
-		return (ft_putstr_fd("Invalid texture type\n", 2), false);
-	return (true);
+	while (ft_isspace(*str) == 1)
+		str++;
+	if (ft_strncmp(str, "NO", 2) == 0 && ft_isspace(*(str + 2)) == 1)
+		get_texture_path(str + 2, &tex->no_tex, is_err);
+	else if (ft_strncmp(str, "SO", 2) == 0 && ft_isspace(*(str + 2)) == 1)
+		get_texture_path(str + 2, &tex->so_tex, is_err);
+	else if (ft_strncmp(str, "WE", 2) == 0 && ft_isspace(*(str + 2)) == 1)
+		get_texture_path(str + 2, &tex->we_tex, is_err);
+	else if (ft_strncmp(str, "EA", 2) == 0 && ft_isspace(*(str + 2)) == 1)
+		get_texture_path(str + 2, &tex->ea_tex, is_err);
 }
 
-int	set_textures(char *str, t_map *map)
+bool	is_texture(char *str)
 {
-	if (map->texture.ceiling != 0 && map->texture.floor != 0
-		&& map->texture.no != NULL && map->texture.so != NULL
-		&& map->texture.we != NULL && map->texture.ea != NULL)
-		return (0);
-	if ((!ft_strncmp(str, "NO ", 3) && !grab_texture(str, &map->texture.no))
-		|| (!ft_strncmp(str, "SO ", 3) && !grab_texture(str, &map->texture.so))
-		|| (!ft_strncmp(str, "EA ", 3) && !grab_texture(str, &map->texture.ea))
-		|| (!ft_strncmp(str, "WE ", 3) && !grab_texture(str, &map->texture.we))
-		|| (!ft_strncmp(str, "C", 1) && !grab_color(str, &map->texture.ceiling))
-		|| (!ft_strncmp(str, "F", 1) && !grab_color(str, &map->texture.floor)))
-		return (free_texture(map), -1);
-	return (1);
+	while (ft_isspace(*str) == 1)
+		str++;
+	if (ft_strncmp(str, "NO", 2) == 0
+		|| ft_strncmp(str, "SO", 2) == 0
+		|| ft_strncmp(str, "WE", 2) == 0
+		|| ft_strncmp(str, "EA", 2) == 0)
+		return (true);
+	return (false);
+}
+
+void	get_texture_data(t_vars *vars, int fd, int *is_err)
+{
+	char	*str;
+
+	str = get_next_line(fd);
+	while (str != NULL)
+	{
+		if (is_texture(str) == true)
+		{
+			set_texture(str, &vars->texture, is_err);
+			if (*is_err == 1)
+			{
+				while (str != NULL)
+				{
+					free(str);
+					str = get_next_line(fd);
+				}
+				delete_and_free_vars(vars);
+				exit(1);
+			}
+		}
+		free(str);
+		str = get_next_line(fd);
+	}
 }

@@ -6,91 +6,44 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:21 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 20:41:05 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/24 17:04:55 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-// bool	is_map(char *str)
-// {
-// 	int		i;
-// 	size_t	count;
-//
-// 	i = -1;
-// 	count = 0;
-// 	while (str[++i])
-// 	{
-// 		if (!ft_isspace(str[i]) && str[i] != '1' && str[i] != '0'
-// 			&& str[i] != 'N' && str[i] != 'S' && str[i] != 'E'
-// 			&& str[i] != 'W' && str[i] != 'D' && str[i] != '\n')
-// 			return (false);
-// 		if (ft_isspace(str[i]))
-// 			count++;
-// 	}
-// 	if (count == ft_strlen(str))
-// 		return (false);
-// 	return (true);
-// }
-
-// bool	set_bounds(t_map *map, char *file)
-// {
-// 	int		fd;
-// 	char	*str;
-//
-// 	fd = open(file, O_RDONLY);
-// 	while (1)
-// 	{
-// 		str = get_next_line(fd);
-// 		if (!str)
-// 			break ;
-// 		if (is_map(str))
-// 		{
-// 			if ((int)ft_strlen(str) > map->x_max)
-// 				map->x_max = ft_strlen(str) - 1;
-// 			map->y_max++;
-// 		}
-// 		free(str);
-// 	}
-// 	if (!map->x_max || !map->y_max)
-// 		return (false);
-// 	return (true);
-// }
-
-void	free_part(t_map *map, int y)
+bool	is_valid_extension(char *filename, char *extension)
 {
-	int	count;
+	int	len_file;
+	int	len_ext;
 
-	count = 0;
-	while (count <= y)
+	len_file = ft_strlen(filename);
+	if (filename[len_file - 1] == '\n')
+		len_file--;
+	len_ext = ft_strlen(extension);
+	if (len_file < len_ext)
+		return (false);
+	filename += len_file - len_ext;
+	if (ft_strncmp(filename, extension, len_ext) == 0)
+		return (true);
+	return (false);
+}
+
+bool	is_valid_file(char *file)
+{
+	int	fd;
+
+	if (is_valid_extension(file, ".cub") == false)
 	{
-		free(map->point[count]);
-		count++;
+		ft_putstr_fd("Error\nInvalid file type\n", 2);
+		return (false);
 	}
-}
-
-void	memfree_array(void **array)
-{
-	int		i;
-	char	**str;
-
-	str = (char **)array;
-	i = -1;
-	while (str[++i])
-		free(str[i]);
-	free(str);
-}
-
-void	free_texture(t_map *map)
-{
-	if (map->texture.no)
-		free(map->texture.no);
-	if (map->texture.so)
-		free(map->texture.so);
-	if (map->texture.ea)
-		free(map->texture.ea);
-	if (map->texture.we)
-		free(map->texture.we);
-	if (map->point)
-		free(map->point);
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+	{
+		ft_putstr_fd("Error\nInvalid file\n", 2);
+		return (false);
+	}
+	close(fd);
+	return (true);
 }

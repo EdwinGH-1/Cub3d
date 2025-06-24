@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 09:46:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 20:28:02 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/24 20:56:21 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	load_texture(t_vars *vars, t_tex_img *tex, char *path)
 	if (tex->img == NULL)
 	{
 		ft_putstr_fd("error: failed to load texture\n", 2);
-		exit (1);
+		delete_and_free_vars(vars);
+		exit(1);
 	}
 	tex->addr = mlx_get_data_addr(tex->img, &tex->bbp, &tex->line_size, &tex->endian);
 }
@@ -44,10 +45,14 @@ void	init_data(t_vars *vars)
 	init_mlx_data(vars);
 	init_minimap_data(&vars->minimap);
 	init_player_data(vars, &vars->map, &vars->player);
-	load_texture(vars, &vars->map.texture.no_tex, "./textures/AnyConv.com__BRICK_1A.xpm");
-	load_texture(vars, &vars->map.texture.so_tex, "./textures/AnyConv.com__BRICK_2B.xpm");
-	load_texture(vars, &vars->map.texture.ea_tex, "./textures/AnyConv.com__BRICK_3B.xpm");
-	load_texture(vars, &vars->map.texture.we_tex, "./textures/AnyConv.com__BRICK_3D.xpm");
+	printf("%s\n", vars->texture.no_tex.path);
+	printf("%s\n", vars->texture.so_tex.path);
+	printf("%s\n", vars->texture.we_tex.path);
+	printf("%s\n", vars->texture.ea_tex.path);
+	load_texture(vars, &vars->texture.no_tex, vars->texture.no_tex.path);
+	load_texture(vars, &vars->texture.so_tex, vars->texture.so_tex.path);
+	load_texture(vars, &vars->texture.ea_tex, vars->texture.ea_tex.path);
+	load_texture(vars, &vars->texture.we_tex, vars->texture.we_tex.path);
 }
 
 int	main(int argc, char **argv)
@@ -62,10 +67,7 @@ int	main(int argc, char **argv)
 	else
 	{
 		ft_memset(&vars, 0, sizeof(t_vars));
-		if (!parse_file(argv, &vars))
-			return (1);
-		// if (!parse_map(argv, &vars, argc))
-		// 	return (1);
+		parse_file(argv, &vars);
 		init_data(&vars);
 		launch_render(&vars);
 	}
