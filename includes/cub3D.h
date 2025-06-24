@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/23 22:21:15 by joshua           ###   ########.fr       */
+/*   Updated: 2025/06/24 16:32:09 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 
 # define WINX 1920
 # define WINY 1080
+# define PIE 3.14159
 
 # define MINI_RAD 500
 # define MINI_BORDER 0x228B22
@@ -40,8 +41,8 @@
 # define P_FOV 66
 # define P_MOVE 5
 
-# define N_RAY 10
-
+# define RAY_N 10
+# define RAY_COLOR 0xFF0000
 
 //-----------------------------CUB3D STRUCTURES--------------------------------
 
@@ -82,14 +83,22 @@ typedef struct s_state
 	bool	key_l;
 }	t_state;
 
+typedef struct s_pos
+{
+	double	x;
+	double	y;
+	double	dist;
+	int		grid_x;
+	int		grid_y;
+}	t_pos;
+
 typedef struct s_player
 {
 	double	dir_x;
 	double	dir_y;
 	double	plane_x;
 	double	plane_y;
-	t_pixel	target;
-	t_pixel	pos;
+	t_pos	pos;
 }	t_player;
 
 typedef struct s_bitmap
@@ -136,15 +145,20 @@ int				handle_key(int keysym, t_meta *meta);
 //		DRAW
 //	draw_map.c
 void			draw_player(t_meta *meta);
+void			draw_ray(t_meta *meta);
 void			draw_circle(t_meta *meta);
 void			draw_grid(t_meta *meta, t_pixel pixel,
 					int count_x, int count_y);
 void			render_minimap(t_meta *meta);
 
 //	draw_line.c
-void			draw_line(t_meta *meta);
+void			draw_line(t_meta *meta, t_pos start, t_pos target);
 void			my_mlx_pixel_put(t_meta *meta, int x, int y,
 					unsigned int color);
 unsigned int	get_pixel(t_meta *meta, int x, int y);
+
+//		RAYCAST
+//	raycast.c
+void			raycast_point(t_meta *meta, t_pos *current);
 
 #endif // !CUB3D_H

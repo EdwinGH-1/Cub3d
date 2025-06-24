@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hook.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:37:18 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/23 22:20:50 by joshua           ###   ########.fr       */
+/*   Updated: 2025/06/24 14:48:28 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	render_image(void *data)
 	render_minimap(meta);
 	draw_circle(meta);
 	draw_player(meta);
+	draw_ray(meta);
 	mlx_put_image_to_window(meta->mlx, meta->win, meta->bitmap.img, 0, 0);
 	return (0);
 }

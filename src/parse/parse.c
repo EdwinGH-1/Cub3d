@@ -6,13 +6,13 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:12:09 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/23 15:50:42 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/24 14:45:33 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-bool	check_start(t_map *map, t_pixel *pos)
+bool	check_start(t_map *map)
 {
 	int	start;
 	int	x;
@@ -44,7 +44,7 @@ bool	check_start(t_map *map, t_pixel *pos)
 	return (true);
 }
 
-bool	check_row(t_pixel *pixel, t_map *map, t_pixel *pos)
+bool	check_row(t_pixel *pixel, t_map *map)
 {
 	int	x1;
 	int	x2;
@@ -63,7 +63,7 @@ bool	check_row(t_pixel *pixel, t_map *map, t_pixel *pos)
 			if (!pixel[x1].value)
 				return (false);
 	}
-	if (pixel[x1].y == map->y_max - 1 && !check_start(map, pos))
+	if (pixel[x1].y == map->y_max - 1 && !check_start(map))
 		return (false);
 	return (true);
 }
@@ -85,7 +85,7 @@ bool	basic_check(t_map *map, int *fd, char *file, int argc)
 	return (true);
 }
 
-bool	set_map(char *str, t_map *map, int y, t_pixel *pos)
+bool	set_map(char *str, t_map *map, int y)
 {
 	int	x;
 
@@ -103,7 +103,7 @@ bool	set_map(char *str, t_map *map, int y, t_pixel *pos)
 		map->pixel[y][x].y = y;
 		x++;
 	}
-	if (!check_row(map->pixel[y], map, pos))
+	if (!check_row(map->pixel[y], map))
 		return (free_part(map, y), free_texture(map),
 			ft_putstr_fd("Invalid Map Format\n", 2), false);
 	return (true);
@@ -128,7 +128,7 @@ bool	parse_map(int argc, char **argv, t_meta *meta)
 		is_texture = set_textures(str, &meta->map);
 		if (!is_texture && y < meta->map.y_max && is_map(str))
 		{
-			if (!set_map(str, &meta->map, y++, &meta->player.pos))
+			if (!set_map(str, &meta->map, y++))
 				return (free(str), false);
 		}
 		else if (is_texture == -1)

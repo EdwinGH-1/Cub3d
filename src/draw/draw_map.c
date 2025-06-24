@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:35:32 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/23 21:32:21 by joshua           ###   ########.fr       */
+/*   Updated: 2025/06/24 16:33:38 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,19 @@ void	draw_player(t_meta *meta)
 
 void	draw_ray(t_meta *meta)
 {
-	t_pixel	current;
+	t_pos	current;
 
 	meta->player.pos.x = MINI_POS + MINI_RAD - meta->map.x_offset;
 	meta->player.pos.y = MINI_POS + MINI_RAD - meta->map.y_offset;
+	meta->player.dir_x = cos(PIE / 2);
+	meta->player.dir_y = sin(PIE / 2);
 	current = meta->player.pos;
-	while (1)
-	{
-		set_point(meta, &current);
-	}
-	meta->player.target = current;
-	draw_line(meta);
+	raycast_point(meta, &current);
+	current.x = MINI_POS + MINI_RAD - current.dist * meta->player.dir_x;
+	current.y = MINI_POS + MINI_RAD - current.dist * meta->player.dir_y;
+	meta->player.pos.x = MINI_POS + MINI_RAD;
+	meta->player.pos.y = MINI_POS + MINI_RAD;
+	draw_line(meta, meta->player.pos, current);
 }
 
 void	draw_circle(t_meta *meta)

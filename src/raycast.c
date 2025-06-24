@@ -3,50 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:54:01 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/23 22:43:17 by joshua           ###   ########.fr       */
+/*   Updated: 2025/06/24 16:27:54 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3D.h"
 
-void	raycast_point(t_meta *meta, t_pixel *current)
+void	raycast_point(t_meta *meta, t_pos *current)
 {
-	int		dist_x;
-	int		dist_y;
-	int		delta_x;
-	int		delta_y;
-	int		side_x;
-	int		side_y;
-	t_pixel	tmp;
-	
-	delta_x = ((current->x / MINI_SIZE * MINI_SIZE) + MINI_SIZE - current->x)
-	/ meta->player.dir_x;
-	delta_y = ((current->y / MINI_SIZE * MINI_SIZE) - current->y)
-	/ meta->player.dir_y;
-	tmp = *current;
+	double	delta_x;
+	double	delta_y;
+	double	dist_x;
+	double	dist_y;
+	int		step[2];
+
+	step[0] = 1;
+	if (meta->player.dir_x < 0.0)
+		step[0] = -1;
+	step[1] = 1;
+	if (meta->player.dir_y < 0.0)
+		step[1] = -1;
+	delta_x = fabs(MINI_SIZE / meta->player.dir_x);
+	delta_y = fabs(MINI_SIZE / meta->player.dir_y);
+	current->grid_x = current->x / MINI_SIZE;
+	current->grid_y = current->y / MINI_SIZE;
+	if (step[0] > 0)
+		dist_x = ((current->grid_x + 1) * MINI_SIZE - current->x)
+			/ meta->player.dir_x;
+	else
+		dist_x = (current->x - current->grid_x * MINI_SIZE)
+			/ meta->player.dir_x;
+	if (step[1] > 0)
+		dist_y = ((current->grid_y + 1) * MINI_SIZE - current->y)
+			/ meta->player.dir_y;
+	else
+		dist_y = (current->y - current->grid_y * MINI_SIZE)
+			/ meta->player.dir_y;
 	while (1)
 	{
 		if (dist_x < dist_y)
 		{
-			tmp.x = current->x + dist_x;
-			tmp.y = current->y + sqrt(dist_x * dist_x - tmp.x * tmp.x);
+			current->dist = dist_x;
+			dist_x += delta_x;
+			current->grid_x += step[0];
 		}
 		else
 		{
-		    tmp.y = current->y + dist_y;
-			tmp.x = current->x + sqrt(dist_y * dist_y - tmp.y * tmp.y);
+			current->dist = dist_y;
+			dist_y += delta_y;
+			current->grid_y += step[1];
 		}
-		*current = tmp;
-		tmp = meta->map.pixel[current->y / MINI_SIZE][current->x / MINI_SIZE];
-		if (tmp.value == 1 || tmp.value == -1)
+		if (meta->map.pixel[current->grid_y][current->grid_x].value == 1
+			|| meta->map.pixel[current->grid_y][current->grid_x].value == -1)
 			break ;
 	}
 }
-    
-void	raycast(t_meta *meta)
-{
+
+// void	raycast(t_meta *meta)
+// {
 	
-}
+// }

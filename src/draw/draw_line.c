@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:32:29 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/20 16:32:25 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:31:52 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	my_mlx_pixel_put(t_meta *meta, int x, int y, unsigned int color)
 	*(unsigned int *)dst = color;
 }
 
-static void	gradient_less_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
+static void	gradient_less_than_one(t_meta *meta, t_pos mask, int dx, int dy)
 {
 	int	p;
 	int	i;
@@ -45,7 +45,7 @@ static void	gradient_less_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 	p = 2 * abs(dy) - abs(dx);
 	while (++i < abs(dx))
 	{
-		my_mlx_pixel_put(meta, mask.x, mask.y, meta->player.target.value);
+		my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
 		if (dx > 0)
 			mask.x--;
 		else if (dx < 0)
@@ -63,7 +63,7 @@ static void	gradient_less_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 	}
 }
 
-static void	gradient_more_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
+static void	gradient_more_than_one(t_meta *meta, t_pos mask, int dx, int dy)
 {
 	int	p;
 	int	i;
@@ -72,7 +72,7 @@ static void	gradient_more_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 	p = 2 * abs(dx) - abs(dy);
 	while (++i < abs(dy))
 	{
-		my_mlx_pixel_put(meta, mask.x, mask.y, meta->player.target.value);
+		my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
 		if (dy > 0)
 			mask.y--;
 		else if (dy < 0)
@@ -90,15 +90,15 @@ static void	gradient_more_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 	}
 }
 
-void	draw_line(t_meta *meta)
+void	draw_line(t_meta *meta, t_pos start, t_pos target)
 {
-	t_pixel	mask;
+	t_pos	mask;
 	int		dx;
 	int		dy;
 
-	dx = meta->player.target.x - meta->player.pos.x;
-	dy = meta->player.target.y - meta->player.pos.y;
-	mask = meta->player.pos;
+	dx = target.x - start.x;
+	dy = target.y - start.y;
+	mask = start;
 	if (abs(dx) > abs(dy))
 		gradient_less_than_one(meta, mask, dx, dy);
 	else
