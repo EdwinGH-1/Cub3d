@@ -6,11 +6,17 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 09:46:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 14:09:04 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:14:24 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3D.h"
+
+void	init_render(t_meta *meta)
+{
+	meta->ray.angle_shift = (P_FOV / PIE * 180) / RAY_N;
+	
+}
 
 int	main(int argc, char **argv)
 {
@@ -23,7 +29,7 @@ int	main(int argc, char **argv)
 	meta.bitmap.img = mlx_new_image(meta.mlx, WINX, WINY);
 	meta.bitmap.addr = mlx_get_data_addr(meta.bitmap.img,
 			&meta.bitmap.bpp, &meta.bitmap.line_length, &meta.bitmap.endian);
-	meta.player.angle = PIE / 2 - (P_FOV * PIE / 180);
+	init_render(&meta);
 	mlx_loop_hook(meta.mlx, render_image, &meta);
 	mlx_hook(meta.win, 2, 1L >> 0, key_press, &meta);
 	mlx_hook(meta.win, 3, 2, key_release, &meta);

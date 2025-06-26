@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:32:29 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 11:49:57 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:29:20 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	my_mlx_pixel_put(t_meta *meta, int x, int y, unsigned int color)
 	*(unsigned int *)dst = color;
 }
 
-static void	gradient_less_than_one(t_meta *meta, t_pos mask, int dx, int dy)
+static void	gradient_less_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 {
 	int	p;
 	int	i;
@@ -64,7 +64,7 @@ static void	gradient_less_than_one(t_meta *meta, t_pos mask, int dx, int dy)
 	}
 }
 
-static void	gradient_more_than_one(t_meta *meta, t_pos mask, int dx, int dy)
+static void	gradient_more_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 {
 	int	p;
 	int	i;
@@ -92,15 +92,16 @@ static void	gradient_more_than_one(t_meta *meta, t_pos mask, int dx, int dy)
 	}
 }
 
-void	draw_line(t_meta *meta, t_pos start, t_pos target)
+void	draw_line(t_meta *meta)
 {
-	t_pos	mask;
+	t_pixel	mask;
 	int		dx;
 	int		dy;
 
-	dx = target.x - start.x;
-	dy = target.y - start.y;
-	mask = start;
+	dx = meta->mini.ray_x - meta->mini.centre_x;
+	dy = meta->mini.ray_y - meta->mini.centre_y;
+	mask.x = meta->mini.centre_x;
+	mask.y = meta->mini.centre_y;
 	if (abs(dx) > abs(dy))
 		gradient_less_than_one(meta, mask, dx, dy);
 	else

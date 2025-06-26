@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/26 14:57:51 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:46:51 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,9 @@ typedef struct s_state
 	bool	key_l;
 }	t_state;
 
+// World position
 typedef struct s_player
 {
-	double	angle;
-	double	increment;
 	double	pos_x;
 	double	pos_y;
 	double	dir_x;
@@ -101,16 +100,28 @@ typedef struct s_player
 //---------RAYCASTING STRUCT
 typedef struct s_ray
 {
-	double	pos_x;
-	double	pos_y;
-	double	dist;
+	double	angle_shift;
+	double	dir_x;
+	double	dir_y;
 	double	perp_dist;
 	double	dist_x;
 	double	dist_y;
+	double	delta_x;
+	double	delta_y;
 	int		grid_x;
 	int		grid_y;
+	int		step_x;
+	int		step_y;
 }	t_ray;
 
+// Map position
+typedef struct s_mini
+{
+	double	centre_x;
+	double	centre_y;
+	double	ray_x;
+	double	ray_y;
+}	t_mini;
 typedef struct s_time
 {
 	double	delta_time;
@@ -135,6 +146,7 @@ typedef struct s_meta
 	void		*win;
 	t_bitmap	bitmap;
 	t_map		map;
+	t_mini		mini;
 	t_player	player;
 	t_state		state;
 	t_ray		ray;
@@ -184,6 +196,6 @@ unsigned int	get_pixel(t_meta *meta, int x, int y);
 
 //		RAYCAST
 //	raycast.c
-void			raycast_point(t_meta *meta, t_ray *current);
+void			raycast_point(t_meta *meta);
 
 #endif // !CUB3D_H
