@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 16:32:09 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:57:51 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,23 @@
 # define WINY 1080
 # define PIE 3.14159
 
-# define MINI_RAD 500
-# define MINI_BORDER 0x228B22
-# define MINI_POS 100
+# define MINI_RAD 200
+# define MINI_BORDER 0x808080
+# define MINI_POS 50
 # define MINI_SIZE 30
 
 # define P_COLOR 0xFF0000
-# define P_SIZE 10
+# define P_SIZE 8
 # define P_FOV 66
 # define P_MOVE 5
+# define P_TURN 4
 
-# define RAY_N 10
-# define RAY_COLOR 0xFF0000
+# define RAY_N 120
+# define RAY_COLOR 0x800080
 
 //-----------------------------CUB3D STRUCTURES--------------------------------
 
+//---------PARSING STRUCT
 typedef struct s_pixel
 {
 	int	x;
@@ -73,6 +75,7 @@ typedef struct s_map
 	int			y_offset;
 }	t_map;
 
+//---------PLAYER STRUCT
 typedef struct s_state
 {
 	bool	key_w;
@@ -83,24 +86,40 @@ typedef struct s_state
 	bool	key_l;
 }	t_state;
 
-typedef struct s_pos
-{
-	double	x;
-	double	y;
-	double	dist;
-	int		grid_x;
-	int		grid_y;
-}	t_pos;
-
 typedef struct s_player
 {
+	double	angle;
+	double	increment;
+	double	pos_x;
+	double	pos_y;
 	double	dir_x;
 	double	dir_y;
 	double	plane_x;
 	double	plane_y;
-	t_pos	pos;
 }	t_player;
 
+//---------RAYCASTING STRUCT
+typedef struct s_ray
+{
+	double	pos_x;
+	double	pos_y;
+	double	dist;
+	double	perp_dist;
+	double	dist_x;
+	double	dist_y;
+	int		grid_x;
+	int		grid_y;
+}	t_ray;
+
+typedef struct s_time
+{
+	double	delta_time;
+	double	last_frame;
+	double	current_frame;
+	double	fps;
+}	t_time;
+
+//---------META DATA STRUCT
 typedef struct s_bitmap
 {
 	void	*img;
@@ -117,6 +136,9 @@ typedef struct s_meta
 	t_bitmap	bitmap;
 	t_map		map;
 	t_player	player;
+	t_state		state;
+	t_ray		ray;
+	t_time		time;
 }	t_meta;
 
 //-----------------------------CUB3D FUNCTIONS---------------------------------
@@ -140,25 +162,28 @@ int				set_textures(char *str, t_map *map);
 //	hook.c
 int				render_image(void *data);
 int				terminate(t_meta *meta);
-int				handle_key(int keysym, t_meta *meta);
+
+//	hook_key.c
+int				key_press(int keysym, t_meta *meta);
+int				key_release(int keysym, t_meta *meta);
+void			translate(t_meta *meta);
 
 //		DRAW
 //	draw_map.c
-void			draw_player(t_meta *meta);
-void			draw_ray(t_meta *meta);
-void			draw_circle(t_meta *meta);
-void			draw_grid(t_meta *meta, t_pixel pixel,
-					int count_x, int count_y);
+bool			in_circle(int x, int y);
 void			render_minimap(t_meta *meta);
 
+//	draw_ray.c
+void			draw_map_ray(t_meta *meta);
+
 //	draw_line.c
-void			draw_line(t_meta *meta, t_pos start, t_pos target);
+void			draw_line(t_meta *meta, t_ray start, t_ray target);
 void			my_mlx_pixel_put(t_meta *meta, int x, int y,
 					unsigned int color);
 unsigned int	get_pixel(t_meta *meta, int x, int y);
 
 //		RAYCAST
 //	raycast.c
-void			raycast_point(t_meta *meta, t_pos *current);
+void			raycast_point(t_meta *meta, t_ray *current);
 
 #endif // !CUB3D_H

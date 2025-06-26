@@ -6,11 +6,11 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:54:01 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/24 16:27:54 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:28:31 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3D.h"
+#include "../../includes/cub3D.h"
 
 void	raycast_point(t_meta *meta, t_pos *current)
 {
@@ -32,16 +32,16 @@ void	raycast_point(t_meta *meta, t_pos *current)
 	current->grid_y = current->y / MINI_SIZE;
 	if (step[0] > 0)
 		dist_x = ((current->grid_x + 1) * MINI_SIZE - current->x)
-			/ meta->player.dir_x;
+			/ fabs(meta->player.dir_x);
 	else
 		dist_x = (current->x - current->grid_x * MINI_SIZE)
-			/ meta->player.dir_x;
+			/ fabs(meta->player.dir_x);
 	if (step[1] > 0)
 		dist_y = ((current->grid_y + 1) * MINI_SIZE - current->y)
-			/ meta->player.dir_y;
+			/ fabs(meta->player.dir_y);
 	else
 		dist_y = (current->y - current->grid_y * MINI_SIZE)
-			/ meta->player.dir_y;
+			/ fabs(meta->player.dir_y);
 	while (1)
 	{
 		if (dist_x < dist_y)

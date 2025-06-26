@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:32:29 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/24 16:31:52 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/26 11:49:57 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ static void	gradient_less_than_one(t_meta *meta, t_pos mask, int dx, int dy)
 	p = 2 * abs(dy) - abs(dx);
 	while (++i < abs(dx))
 	{
-		my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
+		if (in_circle(mask.x, mask.y))
+			my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
 		if (dx > 0)
 			mask.x--;
 		else if (dx < 0)
@@ -72,7 +73,8 @@ static void	gradient_more_than_one(t_meta *meta, t_pos mask, int dx, int dy)
 	p = 2 * abs(dx) - abs(dy);
 	while (++i < abs(dy))
 	{
-		my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
+		if (in_circle(mask.x, mask.y))
+			my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
 		if (dy > 0)
 			mask.y--;
 		else if (dy < 0)

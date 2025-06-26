@@ -6,11 +6,11 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:37:18 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/24 14:48:28 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:54:43 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3D.h"
+#include "../../includes/cub3D.h"
 
 int	terminate(t_meta *meta)
 {
@@ -45,41 +45,14 @@ bool	collision_check(t_meta *meta)
 	return (true);
 }
 
-int	handle_key(int keysym, t_meta *meta)
-{
-	int	offset[2];
-
-	offset[0] = meta->map.x_offset;
-	offset[1] = meta->map.y_offset;
-	if (keysym == XK_w)
-		meta->map.y_offset += P_MOVE;
-	if (keysym == XK_s)
-		meta->map.y_offset -= P_MOVE;
-	if (keysym == XK_a)
-		meta->map.x_offset += P_MOVE;
-	if (keysym == XK_d)
-		meta->map.x_offset -= P_MOVE;
-	if (keysym == XK_Escape)
-		terminate(meta);
-	if (!collision_check(meta))
-	{
-		meta->map.x_offset = offset[0];
-		meta->map.y_offset = offset[1];
-	}
-	render_image(meta);
-	return (0);
-}
-
 int	render_image(void *data)
 {
 	t_meta	*meta;
 
 	meta = (t_meta *)data;
 	ft_bzero(meta->bitmap.addr, WINY * meta->bitmap.line_length);
+	translate(meta);
 	render_minimap(meta);
-	draw_circle(meta);
-	draw_player(meta);
-	draw_ray(meta);
 	mlx_put_image_to_window(meta->mlx, meta->win, meta->bitmap.img, 0, 0);
 	return (0);
 }
