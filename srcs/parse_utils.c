@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:21 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/24 17:04:55 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/26 12:36:52 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,20 @@ bool	is_valid_file(char *file)
 		return (false);
 	}
 	close(fd);
+	return (true);
+}
+
+bool	is_texture_filled(t_texture tex)
+{
+	if (tex.no_tex.path == NULL
+		|| tex.so_tex.path == NULL
+		|| tex.we_tex.path == NULL
+		|| tex.ea_tex.path == NULL
+		|| tex.ceiling.is_set == false
+		|| tex.floor.is_set == false)
+	{
+		ft_putstr_fd("Error\nOne or more texture/color not filled\n", 2);
+		return (false);
+	}
 	return (true);
 }

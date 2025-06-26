@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:03:54 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 20:58:24 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/25 07:11:37 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	set_texture(char *str, t_texture *tex, int *is_err)
 		get_texture_path(str + 2, &tex->we_tex, is_err);
 	else if (ft_strncmp(str, "EA", 2) == 0 && ft_isspace(*(str + 2)) == 1)
 		get_texture_path(str + 2, &tex->ea_tex, is_err);
+	else if (ft_strncmp(str, "DO", 2) == 0 && ft_isspace(*(str + 2)) == 1)
+		get_texture_path(str + 2, &tex->door_tex, is_err);
 }
 
 bool	is_texture(char *str)
@@ -47,7 +49,8 @@ bool	is_texture(char *str)
 	if (ft_strncmp(str, "NO", 2) == 0
 		|| ft_strncmp(str, "SO", 2) == 0
 		|| ft_strncmp(str, "WE", 2) == 0
-		|| ft_strncmp(str, "EA", 2) == 0)
+		|| ft_strncmp(str, "EA", 2) == 0
+		|| ft_strncmp(str, "DO", 2) == 0)
 		return (true);
 	return (false);
 }

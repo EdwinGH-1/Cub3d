@@ -6,13 +6,13 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:14:33 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 21:03:52 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/26 12:39:07 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-bool	is_valid_map(t_map *map)
+bool	is_valid_map_row(t_map *map)
 {
 	int	y;
 	int	x1;
@@ -36,6 +36,34 @@ bool	is_valid_map(t_map *map)
 					return (false);
 		}
 		y++;
+	}
+	return (true);
+}
+
+bool	is_valid_map_col(t_map *map)
+{
+	int	x;
+	int	y1;
+	int	y2;
+
+	x = 0;
+	while (x < map->x_max)
+	{
+		y1 = 0;
+		y2 = map->y_max - 1;
+		while (map->point[y1][x].value == -1)
+			y1++;
+		while (map->point[y2][x].value == -1)
+			y2--;
+		if (map->point[y1][x].value != 1 || map->point[y2][x].value != 1)
+			return (false);
+		if (x == 0 || x == map->x_max - 1)
+		{
+			while (++y1 < y2)
+				if (map->point[y1][x].value == 0)
+					return (false);
+		}
+		x++;
 	}
 	return (true);
 }
@@ -86,21 +114,6 @@ bool	is_map(char *str)
 	}
 	if (count == ft_strlen(str))
 		return (false);
-	return (true);
-}
-
-bool	is_texture_filled(t_texture tex)
-{
-	if (tex.no_tex.path == NULL
-		|| tex.so_tex.path == NULL
-		|| tex.we_tex.path == NULL
-		|| tex.ea_tex.path == NULL
-		|| tex.ceiling.is_set == false
-		|| tex.floor.is_set == false)
-	{
-		ft_putstr_fd("Error\nMap should be last\n", 2);
-		return (false);
-	}
 	return (true);
 }
 
