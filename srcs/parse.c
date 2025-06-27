@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:59:27 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/26 12:36:17 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/26 18:15:01 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,4 @@ void	parse_texture(t_vars *vars, char *file)
 	}
 	get_texture_data(vars, fd, &is_error);
 	close(fd);
-}
-
-void	parse_file(char **argv, t_vars *vars)
-{
-	if (is_valid_file(argv[1]) == false)
-		exit(1);
-	parse_texture(vars, argv[1]);
-	parse_color(vars, argv[1]);
-	if (is_texture_filled(vars->texture) == false)
-	{
-		delete_and_free_vars(vars);
-		exit(1);
-	}
-	parse_map(vars, argv[1]);
 }

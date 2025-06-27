@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   free_1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 19:47:11 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 16:48:44 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/26 21:05:28 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	free_textures(t_vars *vars, t_texture *texture)
 		free(texture->we_tex.path);
 	if (texture->ea_tex.path != NULL)
 		free(texture->ea_tex.path);
+	if (texture->door_tex.path != NULL)
+		free(texture->door_tex.path);
 	if (texture->no_tex.img != NULL)
 		mlx_destroy_image(vars->mlx, texture->no_tex.img);
 	if (texture->so_tex.img != NULL)
@@ -43,6 +45,8 @@ void	free_textures(t_vars *vars, t_texture *texture)
 		mlx_destroy_image(vars->mlx, texture->we_tex.img);
 	if (texture->ea_tex.img != NULL)
 		mlx_destroy_image(vars->mlx, texture->ea_tex.img);
+	if (texture->door_tex.img != NULL)
+		mlx_destroy_image(vars->mlx, texture->door_tex.img);
 }
 
 void	free_map(t_vars *vars)
@@ -78,6 +82,7 @@ void	free_mlx(t_vars *vars)
 void	delete_and_free_vars(t_vars *vars)
 {
 	free_textures(vars, &vars->texture);
+	free_animation(vars, &vars->animation);
 	free_map(vars);
 	free_mlx(vars);
 }

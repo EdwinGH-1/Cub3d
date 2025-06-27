@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:07:14 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/19 22:33:59 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/27 20:40:38 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	is_player(int value)
 	return (false);
 }
 
-void	init_player_data(t_vars *vars, t_map *map, t_player *player)
+void	get_player_coor_and_dir(t_map *map, t_player *player)
 {
 	int	x;
 	int	y;
@@ -47,14 +47,22 @@ void	init_player_data(t_vars *vars, t_map *map, t_player *player)
 			{
 				player->x = x + 0.5;
 				player->y = y + 0.5;
-				player->speed = PLAYER_SPD;
-				player->size =  vars->minimap.cell_size / 2;
 				player->dir = get_player_angle(map->point[y][x].value);
-				printf("player spawned at (%f, %f)\n", player->x, player->y);
 				map->point[y][x].value = 0;
 			}
 			x++;
 		}
 		y++;
 	}
+}
+
+void	init_player_data(t_vars *vars, t_map *map, t_player *player)
+{
+	get_player_coor_and_dir(map, player);
+	player->speed = PLAYER_MOV_SPD;
+	player->size = vars->minimap.cell_size / 2;
+	player->hit_box = (player->size / 2.0) / vars->minimap.cell_size;
+	player->dir_x = cos(player->dir);
+	player->dir_y = sin(player->dir);
+	printf("player spawned at (%f, %f)\n", player->x, player->y);
 }

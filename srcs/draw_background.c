@@ -1,19 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_ray.c                                         :+:      :+:    :+:   */
+/*   draw_background.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/18 13:18:53 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/18 13:18:55 by jthiew           ###   ########.fr       */
+/*   Created: 2025/06/27 19:43:39 by jthiew            #+#    #+#             */
+/*   Updated: 2025/06/27 19:43:52 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void	init_ray_data(t_vars *vars, t_ray *ray)
+void	draw_background(t_vars *vars, t_texture *texture)
 {
-	ray->start_ang = vars->player.dir - ((FOV_ANG / 2.0) * M_PI / 180.0f);
-	ray->end_ang = vars->player.dir + ((FOV_ANG / 2.0) * M_PI / 180.0f);
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < WIN_HEI)
+	{
+		x = 0;
+		while (x < WIN_LEN)
+		{
+			if (y < WIN_HEI / 2)
+				my_mlx_pixel_put(&vars->img, x, y, texture->ceiling.color);
+			else
+				my_mlx_pixel_put(&vars->img, x, y, texture->floor.color);
+			x++;
+		}
+		y++;
+	}
 }

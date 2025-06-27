@@ -3,7 +3,7 @@ RED = \033[0;31m
 RESET = \033[0m
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -O3
 CFLAGS2 = -lXext -lX11 -lm
 
 NAME = ./cub3d
@@ -24,25 +24,31 @@ SRCS_LIST =	 					\
 			parse_utils.c			\
 			parse_texture.c			\
 			parse_texture_utils.c	\
-			draw.c					\
-			free.c					\
+			draw_background.c		\
+			draw_raycasting_1.c		\
+			draw_raycasting_2.c		\
+			draw_minimap.c			\
+			draw_map.c				\
+			draw_fov.c				\
+			draw_player.c			\
+			free_1.c				\
+			free_2.c				\
 			hooks.c					\
 			loop.c					\
 			init_mlx.c				\
+			init_minimap.c			\
 			init_player.c			\
-			init_ray.c				\
-			temp_map.c				\
+			init_texture.c			\
+			init_animation_1.c		\
+			init_animation_2.c		\
+			key_press_func.c		\
+			handle_animation.c		\
+			handle_movement.c		\
+			handle_rotation.c		\
 
 OBJS_DIR = objs
 OBJS = $(SRCS_LIST:.c=.o)
 OBJS_PATH = $(addprefix $(OBJS_DIR)/, $(OBJS))
-
-# SRCDIR = src/
-# OBJDIR = objs/
-# SRCS_FILL = cub3d.c parse/parse.c parse/parse_utils.c parse/parse_texture.c \
-# 			draw/draw_line.c draw/draw_map.c hook.c
-# SRCS = $(addprefix $(SRCDIR), $(SRCS_FILL))
-# OBJS = $(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(SRCS))
 
 LIBFT_PATH = ./libft
 LIBFT_INCLUDES = $(LIBFT_PATH)/includes
