@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 19:45:22 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/27 23:38:40 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/30 16:26:33 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	get_column_strip_extent(t_ray *ray)
 {
 	ray->col_height = (int)((WIN_HEI / ray->perp_wall_dist) * WALL_HEIGHT);
-	ray->col_draw_start = -ray->col_height / 2 + WIN_HEI / 2;
-	ray->col_draw_end = ray->col_height / 2 + WIN_HEI / 2;
+	ray->col_draw_start = WIN_HEI / 2 - ray->col_height / 2;
+	ray->col_draw_end = WIN_HEI / 2 + ray->col_height / 2;
 	if (ray->col_draw_start < 0)
 		ray->col_draw_start = 0;
 	if (ray->col_draw_end >= WIN_HEI)
@@ -42,11 +42,11 @@ int	get_pixel_x(t_vars *vars, t_ray *ray)
 
 int	get_pixel_y(t_ray *ray, int y)
 {
-	int				d;
-	int				pix_y;
+	float	wall_top;
+	int		pix_y;
 
-	d = y * 256 - WIN_HEI * 128 + ray->col_height * 128;
-	pix_y = ((d * ray->tex->height) / ray->col_height) / 256;
+	wall_top = (WIN_HEI / 2.0) - (ray->col_height / 2.0);
+	pix_y = (int)(((y - wall_top) / ray->col_height) * ray->tex->height);
 	if (pix_y < 0)
 		pix_y = 0;
 	if (pix_y >= ray->tex->height)
