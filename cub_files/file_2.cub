@@ -3,8 +3,8 @@ C 10,30,50
 
 NO ./textures/TECH_1C.xpm
 SO ./textures/TECH_3B.xpm
-WE ./textures/TECH_2F.xpm
-EA ./textures/TILE_2C.xpm
+WE ./textures/TECH_3B.xpm
+EA ./textures/TECH_3B.xpm
 DO ./textures/DOOR_1A.xpm
 
 11111111111111

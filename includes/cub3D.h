@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/27 23:43:22 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/30 13:49:47 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,20 @@ typedef struct s_time
 	float			fps_count;
 	float			delta_time;
 }	t_time;
+
+typedef struct s_sprite_scale
+{
+	int		dest_x;
+	int		dest_y;
+	int		src_x;
+	int		src_y;
+	float	scale_x;
+	float	scale_y;
+	int		scaled_width;
+	int		scaled_height;
+	int		x_offset;
+	int		y_offset;
+}	t_sprite_scale;
 
 typedef struct s_sprite
 {
