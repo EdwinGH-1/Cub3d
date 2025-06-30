@@ -6,31 +6,44 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:31:08 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/27 20:41:01 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/30 13:06:44 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
+void	get_scaled_image_data(t_sprite_scale *scale, t_tex_img *sprite)
+{
+	scale->scale_x = (float)WIN_LEN / sprite->width;
+	scale->scale_y = (float)WIN_HEI / sprite->height;
+	scale->scaled_width = sprite->width * scale->scale_x;
+	scale->scaled_height = sprite->height * scale->scale_y;
+	scale->x_offset = WIN_LEN / 2 - scale->scaled_width / 2;
+	scale->y_offset = WIN_HEI / 2 - scale->scaled_height / 2;
+}
+
 void	draw_sprite_to_image(t_vars *vars, t_tex_img *sprite)
 {
-	int				x;
-	int				y;
+	t_sprite_scale	scale;
 	unsigned int	color;
 
-	y = 0;
-	while (y < sprite->height)
+	get_scaled_image_data(&scale, sprite);
+	scale.dest_y = 0;
+	while (scale.dest_y < scale.scaled_height)
 	{
-		x = 0;
-		while (x < sprite->width)
+		scale.dest_x = 0;
+		while (scale.dest_x < scale.scaled_width)
 		{
-			color = *(unsigned int *)(sprite->addr + y * sprite->line_size
-					+ x *(sprite->bbp / 8));
+			scale.src_x = scale.dest_x / scale.scale_x;
+			scale.src_y = scale.dest_y / scale.scale_y;
+			color = *(unsigned int *)(sprite->addr + scale.src_y
+					* sprite->line_size + scale.src_x *(sprite->bbp / 8));
 			if (color != 0x000000)
-				my_mlx_pixel_put(&vars->img, x, y, color);
-			x++;
+				my_mlx_pixel_put(&vars->img, scale.dest_x + scale.x_offset,
+					scale.dest_y + scale.y_offset, color);
+			scale.dest_x++;
 		}
-		y++;
+		scale.dest_y++;
 	}
 }
 
