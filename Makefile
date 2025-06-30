@@ -4,7 +4,9 @@ NAME_MINILIBX = minilibx-linux
 SRCDIR = src/
 OBJDIR = objs/
 SRCS_FILL = cub3d.c parse/parse.c parse/parse_utils.c parse/parse_texture.c \
-			draw/draw_line.c draw/draw_map.c hook.c raycast.c
+			draw/draw_line.c draw/draw_map.c draw/draw_ray.c \
+			hook/hook.c hook/hook_key.c \
+			raycast/raycast.c
 SRCS = $(addprefix $(SRCDIR), $(SRCS_FILL))
 OBJS = $(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(SRCS))
 MINILIBX = $(NAME_MINILIBX)/libmlx_Linux.a

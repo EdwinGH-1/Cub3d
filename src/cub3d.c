@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 09:46:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 17:14:24 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/30 12:27:11 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,22 @@
 
 void	init_render(t_meta *meta)
 {
-	meta->ray.angle_shift = (P_FOV / PIE * 180) / RAY_N;
-	
+	int	value;
+
+	meta->player.pos_x = MINI_POS + MINI_RAD - meta->map.x_offset;
+	meta->player.pos_y = MINI_POS + MINI_RAD - meta->map.y_offset;
+	meta->mini.centre_x = MINI_POS + MINI_RAD;
+	meta->mini.centre_y = MINI_POS + MINI_RAD;
+	meta->mini.angle_shift = (P_FOV * PIE / 180) / RAY_N;
+	value = meta->map.pixel[(int)meta->player.pos_y / MINI_SIZE][(int)meta->player.pos_x / MINI_SIZE].value;
+	if (value == 'N')
+		meta->mini.base_angle = -PIE / 2;
+	else if (value == 'S')
+		meta->mini.base_angle = PIE / 2;
+	else if (value == 'E')
+		meta->mini.base_angle = 0;
+	else if (value == 'W')
+		meta->mini.base_angle = PIE;
 }
 
 int	main(int argc, char **argv)

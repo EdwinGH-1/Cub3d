@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:37:18 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 17:08:43 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:23:13 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ bool	collision_check(t_meta *meta)
 
 void	prep_render(t_meta *meta)
 {
-	meta->player.pos_x = MINI_POS + MINI_RAD + meta->map.x_offset;
-	meta->player.pos_y = MINI_POS + MINI_RAD + meta->map.y_offset;
+	meta->player.pos_x = MINI_POS + MINI_RAD - meta->map.x_offset;
+	meta->player.pos_y = MINI_POS + MINI_RAD - meta->map.y_offset;
 }
 
 int	render_image(void *data)
@@ -59,6 +59,7 @@ int	render_image(void *data)
 	ft_bzero(meta->bitmap.addr, WINY * meta->bitmap.line_length);
 	translate(meta);
 	prep_render(meta);
+	raycast(meta);
 	render_minimap(meta);
 	mlx_put_image_to_window(meta->mlx, meta->win, meta->bitmap.img, 0, 0);
 	return (0);

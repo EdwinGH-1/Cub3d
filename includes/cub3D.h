@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/26 17:46:51 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:57:59 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@
 # define P_COLOR 0xFF0000
 # define P_SIZE 8
 # define P_FOV 66
-# define P_MOVE 5
-# define P_TURN 4
+# define P_SPEED 5
+# define P_TORQUE 4
 
 # define RAY_N 120
 # define RAY_COLOR 0x800080
-
+# define TILE_SIZE 60
 //-----------------------------CUB3D STRUCTURES--------------------------------
 
 //---------PARSING STRUCT
@@ -100,7 +100,8 @@ typedef struct s_player
 //---------RAYCASTING STRUCT
 typedef struct s_ray
 {
-	double	angle_shift;
+	double	pos_x;
+	double	pos_y;
 	double	dir_x;
 	double	dir_y;
 	double	perp_dist;
@@ -121,7 +122,10 @@ typedef struct s_mini
 	double	centre_y;
 	double	ray_x;
 	double	ray_y;
+	double	base_angle;
+	double	angle_shift;
 }	t_mini;
+
 typedef struct s_time
 {
 	double	delta_time;
@@ -174,6 +178,7 @@ int				set_textures(char *str, t_map *map);
 //	hook.c
 int				render_image(void *data);
 int				terminate(t_meta *meta);
+bool			collision_check(t_meta *meta);
 
 //	hook_key.c
 int				key_press(int keysym, t_meta *meta);
@@ -187,15 +192,16 @@ void			render_minimap(t_meta *meta);
 
 //	draw_ray.c
 void			draw_map_ray(t_meta *meta);
+void			raycast(t_meta *meta);
 
 //	draw_line.c
-void			draw_line(t_meta *meta, t_ray start, t_ray target);
+void			draw_line(t_meta *meta);
 void			my_mlx_pixel_put(t_meta *meta, int x, int y,
 					unsigned int color);
 unsigned int	get_pixel(t_meta *meta, int x, int y);
 
 //		RAYCAST
 //	raycast.c
-void			raycast_point(t_meta *meta);
+void			dda_logic(t_meta *meta);
 
 #endif // !CUB3D_H

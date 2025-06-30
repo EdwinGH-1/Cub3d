@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:35:32 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 14:58:37 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:56:11 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ void	render_minimap(t_meta *meta)
 			count_y = -1;
 			while (++count_y < MINI_SIZE)
 			{
-				count_x = -1;
-				while (++count_x < MINI_SIZE)
+				count_x = 0;
+				while (count_x < MINI_SIZE)
 					draw_grid(meta,
 						meta->map.pixel[y][x], count_x++, count_y);
 			}

@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:51:35 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 17:47:18 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/30 16:01:59 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,73 @@
 
 void	draw_map_ray(t_meta *meta)
 {
-	int		centre;
-	double	end;
-	double	shift;
+	double	angle;
+	int		i;
 
-	centre = MINI_POS + MINI_RAD;
-	end = meta->player.angle + P_FOV * PIE / 180;
-	shift = meta->player.angle;
-	while (shift <= end)
+	angle = meta->mini.base_angle - (P_FOV * PIE / 180 / 2);
+	i = -1;
+	while (++i <= RAY_N)
 	{
-		meta->ray.dir_x = cos(shift);
-		meta->ray.dir_y = sin(shift);
-		raycast_point(meta);
-		current.x = centre - current.dist * meta->player.dir_x;
-		current.y = centre - current.dist * meta->player.dir_y;
+		meta->ray.dir_x = cos(angle);
+		meta->ray.dir_y = sin(angle);
+		dda_logic(meta);
+		meta->mini.ray_x = meta->ray.pos_x + meta->map.x_offset;
+		meta->mini.ray_y = meta->ray.pos_y + meta->map.y_offset;
 		draw_line(meta);
+		angle += meta->mini.angle_shift;
+	}
+}
+
+void	print_frag(t_meta *meta, int x)
+{
+	double	height;
+	double	start;
+	double	end;
+	int		y;
+
+	height = TILE_SIZE
+		* (WINX / 2 / tan(P_FOV * PIE / 180 / 2)) / meta->ray.perp_dist;
+	start = (WINY - height) / 2;
+	end = start + height;
+	y = -1;
+	while (++y <= WINY)
+	{
+		if (y < start)
+			my_mlx_pixel_put(meta, x, y, meta->map.texture.ceiling);
+		else if (y > end)
+			my_mlx_pixel_put(meta, x, y, meta->map.texture.floor);
+		else if (meta->ray.dir_x > 0.0)
+		{
+			if (meta->ray.dir_y > 0.0)
+				my_mlx_pixel_put(meta, x, y, 0xff0000);
+			else
+				my_mlx_pixel_put(meta, x, y, 0xfff000);
+		}
+		else
+		{
+			if (meta->ray.dir_y > 0.0)
+				my_mlx_pixel_put(meta, x, y, 0xfff000);
+			else
+				my_mlx_pixel_put(meta, x, y, 0xffffff);
+		}
+	}
+}
+
+void	raycast(t_meta *meta)
+{
+	double	angle;
+	double	shift;
+	int		x;
+
+	angle = meta->mini.base_angle - (P_FOV * PIE / 180 / 2);
+	shift = (P_FOV * PIE / 180) / WINX;
+	x = -1;
+	while (++x <= WINX)
+	{
+		meta->ray.dir_x = cos(angle);
+		meta->ray.dir_y = sin(angle);
+		dda_logic(meta);
+		print_frag(meta, x);
+		angle += shift;
 	}
 }

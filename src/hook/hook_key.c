@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:29:54 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 14:33:02 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:15:12 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,27 +48,48 @@ int	key_release(int keysym, t_meta *meta)
 	return (0);
 }
 
+void	rotation(t_meta *meta)
+{
+	if (meta->state.key_r)
+		meta->mini.base_angle += (P_TORQUE * PIE / 180);
+	if (meta->state.key_l)
+		meta->mini.base_angle -= (P_TORQUE * PIE / 180);
+}
+
 void	translate(t_meta *meta)
 {
-	int	offset[2];
+	int		offset[2];
+	double	velocity;
 
 	offset[0] = meta->map.x_offset;
 	offset[1] = meta->map.y_offset;
+	meta->player.dir_x = cos(meta->mini.base_angle);
+	meta->player.dir_y = sin(meta->mini.base_angle);
+	velocity = P_SPEED;
 	if (meta->state.key_w)
-		meta->map.y_offset += P_MOVE;
+	{
+		meta->map.x_offset -= velocity * meta->player.dir_x;
+		meta->map.y_offset -= velocity * meta->player.dir_y;
+	}
 	if (meta->state.key_s)
-		meta->map.y_offset -= P_MOVE;
+	{
+		meta->map.x_offset += velocity * meta->player.dir_x;
+		meta->map.y_offset += velocity * meta->player.dir_y;
+	}
 	if (meta->state.key_a)
-		meta->map.x_offset += P_MOVE;
+	{
+		meta->map.x_offset -= velocity * meta->player.dir_y;
+		meta->map.y_offset -= velocity * -meta->player.dir_x;
+	}
 	if (meta->state.key_d)
-		meta->map.x_offset -= P_MOVE;
-	if (meta->state.key_r)
-		meta->player.angle -= (P_TURN * PIE / 180);
-	if (meta->state.key_l)
-		meta->player.angle += (P_TURN * PIE / 180);
+	{
+		meta->map.x_offset += velocity * meta->player.dir_y;
+		meta->map.y_offset += velocity * -meta->player.dir_x;
+	}
 	if (!collision_check(meta))
 	{
 		meta->map.x_offset = offset[0];
 		meta->map.y_offset = offset[1];
 	}
+	rotation(meta);
 }
