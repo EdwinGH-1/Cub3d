@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 19:45:22 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/27 23:45:32 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/30 15:10:46 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ void	get_ray_texture(t_vars *vars, t_ray *ray)
 	else
 	{
 		if (ray->dir_y > 0)
-			ray->tex = &vars->texture.no_tex;
-		else
 			ray->tex = &vars->texture.so_tex;
+		else
+			ray->tex = &vars->texture.no_tex;
 	}
 }
 
