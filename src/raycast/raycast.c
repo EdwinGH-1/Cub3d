@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:54:01 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/30 14:47:23 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/01 12:57:23 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,14 @@ void	dda_logic(t_meta *meta)
 			meta->ray.perp_dist = meta->ray.dist_x;
 			meta->ray.dist_x += meta->ray.delta_x;
 			meta->ray.grid_x += meta->ray.step_x;
+			meta->ray.side = 0;
 		}
 		else
 		{
 			meta->ray.perp_dist = meta->ray.dist_y;
 			meta->ray.dist_y += meta->ray.delta_y;
 			meta->ray.grid_y += meta->ray.step_y;
+			meta->ray.side = 1;
 		}
 		if (meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x].value == 1
 			|| meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x].value == -1)

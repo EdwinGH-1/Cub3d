@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:29:54 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/30 15:15:12 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/01 12:05:38 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,32 +59,32 @@ void	rotation(t_meta *meta)
 void	translate(t_meta *meta)
 {
 	int		offset[2];
-	double	velocity;
+	double	velocity_x;
+	double	velocity_y;
 
 	offset[0] = meta->map.x_offset;
 	offset[1] = meta->map.y_offset;
-	meta->player.dir_x = cos(meta->mini.base_angle);
-	meta->player.dir_y = sin(meta->mini.base_angle);
-	velocity = P_SPEED;
+	velocity_x = P_SPEED * meta->player.dir_x;
+	velocity_y = P_SPEED * meta->player.dir_y;
 	if (meta->state.key_w)
 	{
-		meta->map.x_offset -= velocity * meta->player.dir_x;
-		meta->map.y_offset -= velocity * meta->player.dir_y;
+		meta->map.x_offset -= velocity_x;
+		meta->map.y_offset -= velocity_y;
 	}
 	if (meta->state.key_s)
 	{
-		meta->map.x_offset += velocity * meta->player.dir_x;
-		meta->map.y_offset += velocity * meta->player.dir_y;
+		meta->map.x_offset += velocity_x;
+		meta->map.y_offset += velocity_y;
 	}
 	if (meta->state.key_a)
 	{
-		meta->map.x_offset -= velocity * meta->player.dir_y;
-		meta->map.y_offset -= velocity * -meta->player.dir_x;
+		meta->map.x_offset -= velocity_y;
+		meta->map.y_offset -= -velocity_x;
 	}
 	if (meta->state.key_d)
 	{
-		meta->map.x_offset += velocity * meta->player.dir_y;
-		meta->map.y_offset += velocity * -meta->player.dir_x;
+		meta->map.x_offset += velocity_y;
+		meta->map.y_offset += -velocity_x;
 	}
 	if (!collision_check(meta))
 	{

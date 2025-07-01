@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/30 14:57:59 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/01 15:22:42 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ typedef struct s_pixel
 
 typedef struct s_texture
 {
-	char			*no;
-	char			*so;
-	char			*we;
-	char			*ea;
+	char			*path[4];
+	char			*img[4];
+	int				x;
+	int				y;
 	unsigned int	floor;
 	unsigned int	ceiling;
 }	t_texture;
@@ -71,8 +71,8 @@ typedef struct s_map
 	t_texture	texture;
 	int			x_max;
 	int			y_max;
-	int			x_offset;
-	int			y_offset;
+	double		x_offset;
+	double		y_offset;
 }	t_map;
 
 //---------PLAYER STRUCT
@@ -113,6 +113,7 @@ typedef struct s_ray
 	int		grid_y;
 	int		step_x;
 	int		step_y;
+	int		side;
 }	t_ray;
 
 // Map position

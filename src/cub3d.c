@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 09:46:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/30 12:27:11 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/01 10:45:42 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_render(t_meta *meta)
 	meta->mini.angle_shift = (P_FOV * PIE / 180) / RAY_N;
 	value = meta->map.pixel[(int)meta->player.pos_y / MINI_SIZE][(int)meta->player.pos_x / MINI_SIZE].value;
 	if (value == 'N')
-		meta->mini.base_angle = -PIE / 2;
+		meta->mini.base_angle = 3 * PIE / 2;
 	else if (value == 'S')
 		meta->mini.base_angle = PIE / 2;
 	else if (value == 'E')
@@ -46,7 +46,7 @@ int	main(int argc, char **argv)
 	init_render(&meta);
 	mlx_loop_hook(meta.mlx, render_image, &meta);
 	mlx_hook(meta.win, 2, 1L >> 0, key_press, &meta);
-	mlx_hook(meta.win, 3, 2, key_release, &meta);
+	mlx_hook(meta.win, 3, 2L >> 0, key_release, &meta);
 	mlx_hook(meta.win, 17, 0, terminate, &meta);
 	mlx_loop(meta.mlx);
 	return (0);

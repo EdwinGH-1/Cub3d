@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:51:35 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/30 16:01:59 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/01 15:36:25 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,36 @@ void	draw_map_ray(t_meta *meta)
 	}
 }
 
+unsigned int	texture_pixel(t_meta *meta,
+	int index, double start, double height)
+{
+	
+}
+
+int	texture_index(t_meta *meta)
+{
+	if (meta->ray.side == 0)
+	{
+		if (meta->ray.dir_x > 0.0)
+			return (2);
+		else
+			return (3);
+	}
+	else
+	{
+		if (meta->ray.dir_y > 0.0)
+			return (1);
+		else
+			return (0);
+	}
+}
+
 void	print_frag(t_meta *meta, int x)
 {
 	double	height;
 	double	start;
 	double	end;
+	int		index;
 	int		y;
 
 	height = TILE_SIZE
@@ -43,26 +68,16 @@ void	print_frag(t_meta *meta, int x)
 	start = (WINY - height) / 2;
 	end = start + height;
 	y = -1;
+	index = texture_index(meta);
 	while (++y <= WINY)
 	{
 		if (y < start)
 			my_mlx_pixel_put(meta, x, y, meta->map.texture.ceiling);
 		else if (y > end)
 			my_mlx_pixel_put(meta, x, y, meta->map.texture.floor);
-		else if (meta->ray.dir_x > 0.0)
-		{
-			if (meta->ray.dir_y > 0.0)
-				my_mlx_pixel_put(meta, x, y, 0xff0000);
-			else
-				my_mlx_pixel_put(meta, x, y, 0xfff000);
-		}
 		else
-		{
-			if (meta->ray.dir_y > 0.0)
-				my_mlx_pixel_put(meta, x, y, 0xfff000);
-			else
-				my_mlx_pixel_put(meta, x, y, 0xffffff);
-		}
+			my_mlx_pixel_put(meta, x, y,
+				texture_pixel(meta, index, start, height));
 	}
 }
 
