@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_ray.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:51:35 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/01 15:36:25 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/01 20:07:07 by joshua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,19 @@ void	draw_map_ray(t_meta *meta)
 }
 
 unsigned int	texture_pixel(t_meta *meta,
-	int index, double start, double height)
+	int index, int x, int y)
 {
-	
+	unsigned char	*pixel;
+
+	meta->map.texture.img[index] = mlx_xpm_file_to_image(meta->mlx,
+		meta->map.texture.path[index], &meta->map.texture.x,
+		&meta->map.texture.y);
+	meta->map.texture.addr = mlx_get_data_addr(meta->map.texture.img[index],
+		&meta->map.texture.bpp, &meta->map.texture.line_length,
+		&meta->map.texture.endian);
+	pixel = (unsigned char *)meta->map.texture.addr
+		+ y * meta->map.texture.line_length + x * (meta->map.texture.bpp / 8);
+	return (*(int *)pixel);
 }
 
 int	texture_index(t_meta *meta)
@@ -77,7 +87,7 @@ void	print_frag(t_meta *meta, int x)
 			my_mlx_pixel_put(meta, x, y, meta->map.texture.floor);
 		else
 			my_mlx_pixel_put(meta, x, y,
-				texture_pixel(meta, index, start, height));
+				texture_pixel(meta, index, x, y));
 	}
 }
 

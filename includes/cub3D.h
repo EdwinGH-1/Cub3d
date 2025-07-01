@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/01 15:22:42 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/01 22:46:25 by joshua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,24 @@
 # define RAY_N 120
 # define RAY_COLOR 0x800080
 # define TILE_SIZE 60
+
+# define NO 0
+# define SO 1
+# define EA 2
+# define WE 3
 //-----------------------------CUB3D STRUCTURES--------------------------------
 
 //---------PARSING STRUCT
+typedef struct s_utils
+{
+	int		fd;
+	int		map_start;
+	int		x;
+	int		y;
+	bool	is_map;
+	bool	textures[4];
+}	t_utils;
+
 typedef struct s_pixel
 {
 	int	x;
@@ -57,22 +72,26 @@ typedef struct s_pixel
 
 typedef struct s_texture
 {
-	char			*path[4];
-	char			*img[4];
+	char			*path;
+	void			*img;
+	char			*addr;
 	int				x;
 	int				y;
-	unsigned int	floor;
-	unsigned int	ceiling;
+	int				bpp;
+	int				line_length;
+	int				endian;
 }	t_texture;
 
 typedef struct s_map
 {
-	t_pixel		**pixel;
-	t_texture	texture;
-	int			x_max;
-	int			y_max;
-	double		x_offset;
-	double		y_offset;
+	t_pixel			**pixel;
+	t_texture		texture[5];
+	unsigned int	floor;
+	unsigned int	ceiling;
+	int				x_max;
+	int				y_max;
+	double			x_offset;
+	double			y_offset;
 }	t_map;
 
 //---------PLAYER STRUCT
@@ -149,6 +168,7 @@ typedef struct s_meta
 {
 	void		*mlx;
 	void		*win;
+	t_utils		parse;
 	t_bitmap	bitmap;
 	t_map		map;
 	t_mini		mini;
