@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/30 13:49:47 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:29:24 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@
 
 // PLAYER
 # define PLAYER_MOV_SPD 2.0f
+# define PLAYER_ROT_SENS 1.0f
 # define MOUSE_SENSITIVITY 0.0005f
 
 //-----------------------------CUB3D STRUCTURES--------------------------------
