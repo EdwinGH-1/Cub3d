@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 09:46:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/01 10:45:42 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/02 15:09:15 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 
 void	init_render(t_meta *meta)
 {
-	int	value;
+	t_texture	tex;
+	int			index;
 
 	meta->player.pos_x = MINI_POS + MINI_RAD - meta->map.x_offset;
 	meta->player.pos_y = MINI_POS + MINI_RAD - meta->map.y_offset;
 	meta->mini.centre_x = MINI_POS + MINI_RAD;
 	meta->mini.centre_y = MINI_POS + MINI_RAD;
 	meta->mini.angle_shift = (P_FOV * PIE / 180) / RAY_N;
-	value = meta->map.pixel[(int)meta->player.pos_y / MINI_SIZE][(int)meta->player.pos_x / MINI_SIZE].value;
-	if (value == 'N')
-		meta->mini.base_angle = 3 * PIE / 2;
-	else if (value == 'S')
-		meta->mini.base_angle = PIE / 2;
-	else if (value == 'E')
-		meta->mini.base_angle = 0;
-	else if (value == 'W')
-		meta->mini.base_angle = PIE;
+	index = -1;
+	while (++index <= DO && meta->parse.textures[index])
+	{
+		tex = meta->map.texture[index];
+		tex.img = mlx_xpm_file_to_image(meta->mlx, tex.path, &tex.x, &tex.y);
+		tex.addr = mlx_get_data_addr(tex.img,
+				&tex.bpp, &tex.line_length, &tex.endian);
+	}
 }
 
 int	main(int argc, char **argv)
@@ -51,18 +51,3 @@ int	main(int argc, char **argv)
 	mlx_loop(meta.mlx);
 	return (0);
 }
-
-// size_t	x;
-// size_t	y;
-// y = 0;
-// while (y < meta.map.y_max)
-// {
-// 	x = 0;
-// 	while (x < meta.map.x_max)
-// 	{
-// 		printf("%i", meta.map.pixel[y][x].value);
-// 		x++;
-// 	}
-// 	printf("\n");
-// 	y++;
-// }

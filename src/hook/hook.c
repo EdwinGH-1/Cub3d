@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:37:18 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/01 13:31:14 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:02:01 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	terminate(t_meta *meta)
 {
-	free_part(&meta->map, meta->map.y_max);
-	free_texture(&meta->map);
+	free_texture(meta);
+	memfree_array((void **)meta->map.pixel);
 	mlx_destroy_image(meta->mlx, meta->bitmap.img);
 	mlx_destroy_window(meta->mlx, meta->win);
 	mlx_destroy_display(meta->mlx);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/01 22:46:25 by joshua           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:11:22 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@
 # define SO 1
 # define EA 2
 # define WE 3
+# define DO 4
+# define F 5
+# define C 6
 //-----------------------------CUB3D STRUCTURES--------------------------------
 
 //---------PARSING STRUCT
@@ -57,10 +60,10 @@ typedef struct s_utils
 {
 	int		fd;
 	int		map_start;
-	int		x;
 	int		y;
-	bool	is_map;
-	bool	textures[4];
+	int		count;
+	int		is_map;
+	bool	textures[7];
 }	t_utils;
 
 typedef struct s_pixel
@@ -185,15 +188,17 @@ typedef struct s_meta
 bool			parse_map(int argc, char **argv, t_meta *meta);
 
 //	parse_utils.c
-bool			set_bounds(t_map *map, char *file);
+bool			set_bounds(t_meta *meta, char *file);
 bool			is_map(char *str);
 void			memfree_array(void **array);
-void			free_texture(t_map *map);
-void			free_part(t_map *map, int y);
+void			free_texture(t_meta *meta);
 
 //	parse_texture.c
 bool			check_extension(char *file, char *extension);
-int				set_textures(char *str, t_map *map);
+int				set_textures(t_meta *meta, char *str);
+
+//	parse_error.c
+bool			parse_error(t_meta *meta);
 
 //		HOOK
 //	hook.c

@@ -3,8 +3,8 @@ NAME_LIBFT = libft
 NAME_MINILIBX = minilibx-linux
 SRCDIR = src/
 OBJDIR = objs/
-SRCS_FILL = cub3d.c parse/parse.c parse/parse_utils.c parse/parse_texture.c \
-			draw/draw_line.c draw/draw_map.c draw/draw_ray.c \
+SRCS_FILL = cub3d.c draw/draw_line.c draw/draw_map.c draw/draw_ray.c \
+			parse/parse.c parse/parse_utils.c parse/parse_texture.c parse/parse_error.c\
 			hook/hook.c hook/hook_key.c \
 			raycast/raycast.c
 SRCS = $(addprefix $(SRCDIR), $(SRCS_FILL))

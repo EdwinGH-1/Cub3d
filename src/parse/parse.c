@@ -3,137 +3,75 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:12:09 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/01 20:16:29 by joshua           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:45:01 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-bool	check_start(t_map *map)
-{
-	int	start;
-	int	x;
-	int	y;
-
-	y = 0;
-	start = 0;
-	while (y < map->y_max)
-	{
-		x = 0;
-		while (x < map->x_max)
-		{
-			if (map->pixel[y][x].value == 'N' || map->pixel[y][x].value == 'S'
-				|| map->pixel[y][x].value == 'E'
-				|| map->pixel[y][x].value == 'W')
-			{
-				start++;
-				map->x_offset -= x * MINI_SIZE
-					- MINI_RAD - MINI_POS + (MINI_SIZE / 2);
-				map->y_offset -= y * MINI_SIZE
-					- MINI_RAD - MINI_POS + (MINI_SIZE / 2);
-			}
-			x++;
-		}
-		y++;
-	}
-	if (start != 1)
-		return (false);
-	return (true);
-}
-
-bool	check_row(t_pixel *pixel, t_map *map)
-{
-	int	x1;
-	int	x2;
-
-	x1 = 0;
-	x2 = map->x_max - 1;
-	while (pixel[x1].value == -1)
-		x1++;
-	while (pixel[x2].value == -1)
-		x2--;
-	if (pixel[x1].value != 1 || pixel[x2].value != 1)
-		return (false);
-	if (pixel[x1].y == 0 || pixel[x1].y == map->y_max - 1)
-	{
-		while (++x1 < x2)
-			if (!pixel[x1].value)
-				return (false);
-	}
-	if (pixel[x1].y == map->y_max - 1 && !check_start(map))
-		return (false);
-	return (true);
-}
-
-bool	basic_check(t_map *map, int *fd, char *file, int argc)
+bool	init_parse(t_meta *meta, char *file, int argc)
 {
 	if (argc != 2)
 		return (ft_putstr_fd("Incorrect Argument Count\n", 2), false);
 	if (!check_extension(file, ".cub"))
 		return (ft_putstr_fd("Invalid File Type\n", 2), false);
-	*fd = open(file, O_RDONLY);
-	if (*fd < 0)
+	ft_memset(meta, 0, sizeof(t_meta));
+	meta->parse.fd = open(file, O_RDONLY);
+	if (meta->parse.fd < 0)
 		return (ft_putstr_fd("Invalid File\n", 2), false);
-	if (!set_bounds(map, file))
-		return (ft_putstr_fd("Invalid Map\n", 2), false);
-	map->pixel = malloc((map->y_max) * sizeof(t_pixel *));
-	if (!map->pixel)
+	if (!set_bounds(meta, file))
+		return (free_texture(meta), false);
+	meta->map.pixel = malloc((meta->map.y_max) * sizeof(t_pixel *));
+	if (!meta->map.pixel)
 		return (ft_putstr_fd("Malloc Error\n", 2), false);
 	return (true);
 }
 
-bool	set_map(char *str, t_map *map, int y)
+void	set_map(t_meta *meta, char *str)
 {
 	int	x;
 
 	x = 0;
-	map->pixel[y] = malloc(map->x_max * (sizeof(t_pixel)));
-	while (x < map->x_max)
+	meta->map.pixel[meta->parse.y]
+		= malloc(meta->map.x_max * (sizeof(t_pixel)));
+	while (x < meta->map.x_max)
 	{
 		if (x >= (int)ft_strlen(str) || ft_isspace(str[x]))
-			map->pixel[y][x].value = -1;
+			meta->map.pixel[meta->parse.y][x].value = -1;
 		else if (ft_isdigit(str[x]))
-			map->pixel[y][x].value = str[x] - '0';
+			meta->map.pixel[meta->parse.y][x].value = str[x] - '0';
 		else
-			map->pixel[y][x].value = str[x];
-		map->pixel[y][x].x = x;
-		map->pixel[y][x].y = y;
+			meta->map.pixel[meta->parse.y][x].value = str[x];
+		meta->map.pixel[meta->parse.y][x].x = x;
+		meta->map.pixel[meta->parse.y][x].y = meta->parse.y;
 		x++;
 	}
-	if (!check_row(map->pixel[y], map))
-		return (free_part(map, y), free_texture(map),
-			ft_putstr_fd("Invalid Map Format\n", 2), false);
-	return (true);
+	meta->parse.y++;
 }
 
 bool	parse_map(int argc, char **argv, t_meta *meta)
 {
 	char	*str;
-	int		fd;
-	int		is_texture;
-	int		y;
 
-	ft_memset(meta, 0, sizeof(t_meta));
-	if (!basic_check(&meta->map, &fd, argv[1], argc))
+	if (!init_parse(meta, argv[1], argc))
 		return (false);
-	y = 0;
 	while (1)
 	{
-		str = get_next_line(fd);
+		str = get_next_line(meta->parse.fd);
 		if (!str)
 			break ;
-		is_texture = set_textures(str, &meta->map);
-		if (!is_texture && y < meta->map.y_max && is_map(str))
-		{
-			if (!set_map(str, &meta->map, y++))
-				return (free(str), false);
-		}
-		else if (is_texture == -1)
-			return (free(str), false);
+		if (meta->parse.count >= meta->parse.map_start
+			&& meta->parse.y < meta->map.y_max && is_map(str))
+			set_map(meta, str);
 		free(str);
+		meta->parse.count++;
 	}
+	close(meta->parse.fd);
+	if (!parse_error(meta))
+		return (free_texture(meta),
+			memfree_array((void **)meta->map.pixel), false);
 	return (true);
 }

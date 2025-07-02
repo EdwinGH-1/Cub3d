@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshua <joshua@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:21 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/01 20:16:30 by joshua           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:39:29 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	is_map(char *str)
 			&& str[i] != 'N' && str[i] != 'S' && str[i] != 'E'
 			&& str[i] != 'W' && str[i] != 'D' && str[i] != '\n')
 			return (false);
-		if (ft_isspace(str[i]))
+		if (ft_isspace(str[i]) || str[i] == '\n')
 			count++;
 	}
 	if (count == ft_strlen(str))
@@ -33,7 +33,7 @@ bool	is_map(char *str)
 	return (true);
 }
 
-bool	set_bounds(t_map *map, char *file)
+bool	set_bounds(t_meta *meta, char *file)
 {
 	int		fd;
 	char	*str;
@@ -44,29 +44,22 @@ bool	set_bounds(t_map *map, char *file)
 		str = get_next_line(fd);
 		if (!str)
 			break ;
-		if (is_map(str))
+		meta->parse.is_map = set_textures(meta, str);
+		if (meta->parse.is_map < 0)
+			return (close(fd), free(str), false);
+		if (meta->parse.is_map == 1 && is_map(str))
 		{
-			if ((int)ft_strlen(str) > map->x_max)
-				map->x_max = ft_strlen(str) - 1;
-			map->y_max++;
+			if ((int)ft_strlen(str) > meta->map.x_max)
+				meta->map.x_max = ft_strlen(str) - 1;
+			meta->map.y_max++;
 		}
+		if (!meta->map.y_max)
+			meta->parse.map_start++;
 		free(str);
 	}
-	if (!map->x_max || !map->y_max)
-		return (false);
-	return (true);
-}
-
-void	free_part(t_map *map, int y)
-{
-	int	count;
-
-	count = 0;
-	while (count <= y)
-	{
-		free(map->pixel[count]);
-		count++;
-	}
+	if (!meta->map.x_max || !meta->map.y_max)
+		return (close(fd), ft_putstr_fd("Invalid Map\n", 2), false);
+	return (close(fd), true);
 }
 
 void	memfree_array(void **array)
@@ -81,16 +74,16 @@ void	memfree_array(void **array)
 	free(str);
 }
 
-void	free_texture(t_map *map)
+void	free_texture(t_meta *meta)
 {
-	if (map->texture.no)
-		free(map->texture.no);
-	if (map->texture.so)
-		free(map->texture.so);
-	if (map->texture.ea)
-		free(map->texture.ea);
-	if (map->texture.we)
-		free(map->texture.we);
-	if (map->pixel)
-		free(map->pixel);
+	if (meta->parse.textures[NO])
+		free(meta->map.texture[NO].path);
+	if (meta->parse.textures[SO])
+		free(meta->map.texture[SO].path);
+	if (meta->parse.textures[EA])
+		free(meta->map.texture[EA].path);
+	if (meta->parse.textures[WE])
+		free(meta->map.texture[WE].path);
+	if (meta->parse.textures[DO])
+		free(meta->map.texture[DO].path);
 }
