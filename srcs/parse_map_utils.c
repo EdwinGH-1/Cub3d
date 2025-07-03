@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:14:33 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/26 12:39:07 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/03 18:53:05 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,8 @@ bool	is_map(char *str)
 	{
 		if (ft_isspace(str[i]) == 0 && str[i] != '1' && str[i] != '0'
 			&& str[i] != 'N' && str[i] != 'S' && str[i] != 'E'
-			&& str[i] != 'W' && str[i] != 'D' && str[i] != '\n')
+			&& str[i] != 'W' && str[i] != 'D' && str[i] != 'O'
+			&& str[i] != '\n')
 			return (false);
 		if (ft_isspace(str[i]) == 1)
 			count++;
