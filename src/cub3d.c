@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 09:46:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/02 15:09:15 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/03 12:36:41 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_render(t_meta *meta)
 {
-	t_texture	tex;
+	t_texture	*tex;
 	int			index;
 
 	meta->player.pos_x = MINI_POS + MINI_RAD - meta->map.x_offset;
@@ -23,12 +23,14 @@ void	init_render(t_meta *meta)
 	meta->mini.centre_y = MINI_POS + MINI_RAD;
 	meta->mini.angle_shift = (P_FOV * PIE / 180) / RAY_N;
 	index = -1;
+	tex = NULL;
 	while (++index <= DO && meta->parse.textures[index])
 	{
-		tex = meta->map.texture[index];
-		tex.img = mlx_xpm_file_to_image(meta->mlx, tex.path, &tex.x, &tex.y);
-		tex.addr = mlx_get_data_addr(tex.img,
-				&tex.bpp, &tex.line_length, &tex.endian);
+		tex = &meta->map.texture[index];
+		tex->img = mlx_xpm_file_to_image(meta->mlx,
+				tex->path, &tex->width, &tex->height);
+		tex->addr = mlx_get_data_addr(tex->img,
+				&tex->bpp, &tex->line_length, &tex->endian);
 	}
 }
 

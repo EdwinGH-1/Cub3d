@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/02 14:11:22 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/03 12:49:37 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ typedef struct s_texture
 	char			*path;
 	void			*img;
 	char			*addr;
-	int				x;
-	int				y;
+	int				height;
+	int				width;
 	int				bpp;
 	int				line_length;
 	int				endian;
@@ -93,6 +93,8 @@ typedef struct s_map
 	unsigned int	ceiling;
 	int				x_max;
 	int				y_max;
+	int				x_tex;
+	int				y_tex;
 	double			x_offset;
 	double			y_offset;
 }	t_map;

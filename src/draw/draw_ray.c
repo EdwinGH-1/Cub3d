@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:51:35 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/02 16:20:20 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:09:26 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ void	draw_map_ray(t_meta *meta)
 	}
 }
 
-unsigned int	texture_pixel(t_texture tex, int x, int y)
+unsigned int	texture_color(t_meta *meta, t_texture tex)
 {
 	unsigned char	*pixel;
 
 	pixel = (unsigned char *)tex.addr
-		+ y * tex.line_length + x * (tex.bpp / 8);
-	return (*(int *)pixel);
+		+ meta->map.y_tex * tex.line_length + (meta->map.x_tex * tex.bpp / 8);
+	return (*(unsigned int *)pixel);
 }
 
 int	texture_index(t_meta *meta)
@@ -61,28 +61,37 @@ int	texture_index(t_meta *meta)
 void	print_frag(t_meta *meta, int x)
 {
 	t_texture	texture;
-	double		height;
+	double		line_h;
 	double		start;
 	double		end;
 	double		step;
-	double		tex_pos;
-	int			tex_x;
-	int			tex_y;
+	double		wall_x;
 	int			y;
 
-	height = TILE_SIZE
+	line_h = TILE_SIZE
 		* (WINX / 2 / tan(P_FOV * PIE / 180 / 2)) / meta->ray.perp_dist;
-	start = (WINY - height) / 2;
-	end = start + height;
+	start = (WINY - line_h) / 2.0;
+	if (start < 0)
+		start = 0;
+	end = start + line_h;
+	if (end >= WINY)
+		end = WINY - 1;
 	texture = meta->map.texture[texture_index(meta)];
-	tex_x = meta->ray.pos_x * (double)texture.x;
+	if (meta->ray.side == 0)
+		wall_x = meta->ray.pos_x - floor(meta->ray.pos_x);
+	else
+		wall_x = meta->ray.pos_y - floor(meta->ray.pos_y);
+	meta->map.x_tex = wall_x * (double)texture.width;
+	if (meta->map.x_tex < 0)
+		meta->map.x_tex = 0;
+	else if (meta->map.x_tex >= texture.width)
+		meta->map.x_tex = texture.width - 1;
 	if ((meta->ray.side == 0 && meta->ray.dir_x > 0)
 		|| (meta->ray.side == 1 && meta->ray.dir_y < 0))
-		tex_x = texture.x - tex_x - 1;
-	step = texture.y / height;
-	tex_pos = (start - WINY / 2 + height / 2) * step;
+		meta->map.x_tex = texture.width - meta->map.x_tex - 1;
+	step = 1.0 * texture.height / line_h;
 	y = -1;
-	while (++y <= WINY)
+	while (++y < WINY)
 	{
 		if (y < start)
 			my_mlx_pixel_put(meta, x, y, meta->map.ceiling);
@@ -90,14 +99,12 @@ void	print_frag(t_meta *meta, int x)
 			my_mlx_pixel_put(meta, x, y, meta->map.floor);
 		else
 		{
-			tex_y = (int)tex_pos;
-			if (tex_y < 0)
-				tex_y = 0;
-			else if (tex_y >= texture.y)
-				tex_y = texture.y - 1;
-			tex_pos += step;
-			my_mlx_pixel_put(meta, x, y,
-				texture_pixel(texture, (int)tex_x, (int)tex_y));
+			if (meta->map.y_tex < 0)
+				meta->map.y_tex = 0;
+			else if (meta->map.y_tex >= texture.height)
+				meta->map.y_tex = texture.height - 1;
+			my_mlx_pixel_put(meta, x, y, texture_color(meta, texture));
+			meta->map.y_tex += (int)step;
 		}
 	}
 }
@@ -111,7 +118,7 @@ void	raycast(t_meta *meta)
 	angle = meta->mini.base_angle - (P_FOV * PIE / 180 / 2);
 	shift = (P_FOV * PIE / 180) / WINX;
 	x = -1;
-	while (++x <= WINX)
+	while (++x < WINX)
 	{
 		meta->ray.dir_x = cos(angle);
 		meta->ray.dir_y = sin(angle);
