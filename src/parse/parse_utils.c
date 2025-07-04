@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:21 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/02 14:39:29 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:41:06 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ bool	is_map(char *str)
 	{
 		if (!ft_isspace(str[i]) && str[i] != '1' && str[i] != '0'
 			&& str[i] != 'N' && str[i] != 'S' && str[i] != 'E'
-			&& str[i] != 'W' && str[i] != 'D' && str[i] != '\n')
+			&& str[i] != 'W' && str[i] != 'D' && str[i] != 'O'
+			&& str[i] != '\n')
 			return (false);
 		if (ft_isspace(str[i]) || str[i] == '\n')
 			count++;

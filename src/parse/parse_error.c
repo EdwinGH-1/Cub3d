@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:43:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/02 14:45:15 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 11:03:21 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ void	init_view(t_meta *meta, int x, int y)
 
 	value = meta->map.pixel[y][x].value;
 	if (value == 'N')
-		meta->mini.base_angle = 3 * PIE / 2;
+		meta->player.base_angle = 3 * PIE / 2;
 	else if (value == 'S')
-		meta->mini.base_angle = PIE / 2;
+		meta->player.base_angle = PIE / 2;
 	else if (value == 'E')
-		meta->mini.base_angle = 0;
+		meta->player.base_angle = 0;
 	else if (value == 'W')
-		meta->mini.base_angle = PIE;
+		meta->player.base_angle = PIE;
 	meta->map.x_offset -= x * MINI_SIZE
 		- MINI_RAD - MINI_POS + (MINI_SIZE / 2);
 	meta->map.y_offset -= y * MINI_SIZE

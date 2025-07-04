@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 14:33:00 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/02 15:35:55 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:47:51 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ bool	grab_texture(char *str, char **texture, bool *index)
 		return (ft_putstr_fd("Invalid Texture Type\n", 2), false);
 	fd = open(*texture, O_RDONLY);
 	if (fd < 0)
-		return (ft_putstr_fd("Invalid Texture Path", 2), close(fd), false);
+		return (ft_putstr_fd("Invalid Texture Path\n", 2), close(fd), false);
+	close(fd);
 	return (true);
 }
 
@@ -89,13 +90,13 @@ int	set_textures(t_meta *meta, char *str)
 				&(meta->map.texture[EA].path), &(meta->parse.textures[EA])))
 		|| (!ft_strncmp(str, "WE ", 3) && !grab_texture(str,
 				&(meta->map.texture[WE].path), &(meta->parse.textures[WE])))
+		|| (!ft_strncmp(str, "DO ", 3) && !grab_texture(str,
+				&(meta->map.texture[DO].path), &(meta->parse.textures[DO])))
 		|| (!ft_strncmp(str, "F ", 2) && !grab_color(str,
 				&(meta->map.floor), &(meta->parse.textures[F])))
 		|| (!ft_strncmp(str, "C ", 2) && !grab_color(str,
-				&(meta->map.ceiling), &(meta->parse.textures[C])))
-		|| (!ft_strncmp(str, "D ", 2) && !grab_texture(str,
-				&(meta->map.texture[DO].path), &(meta->parse.textures[DO]))))
-		return (free_texture(meta), -1);
+				&(meta->map.ceiling), &(meta->parse.textures[C]))))
+		return (-1);
 	i = -1;
 	while (++i <= C)
 		if (!meta->parse.textures[i] && i != DO)

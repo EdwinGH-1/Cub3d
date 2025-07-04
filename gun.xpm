@@ -1,0 +1,25 @@
+/* XPM */
+static char *gun_xpm[] = {
+"32 16 4 1",            /* width height colors chars-per-pixel */
+"  c None",             /* transparent */
+"X c #000000",          /* black outline */
+"O c #777777",          /* gray body */
+"+ c #D2691E",          /* brown grip */
+
+"                                ",
+"        XXXXXX                  ",
+"       XOOOOOXX                 ",
+"   XXXXOOOOOOOXXXXXXXX          ",
+"   XOOOOOOOOOOOOOOOXX           ",
+"   XOOOOOOOOOOOOOOOOXX          ",
+"   XOOOOO++++OOOOOOXX           ",
+"   XOOOOO++++OOOOOOXX           ",
+"   XOOOOO++++OOOOOOXX           ",
+"   XOOOOOOOOOOOOOOOOXX          ",
+"   XOOOOOOOOOOOOOOOXX           ",
+"   XXXXOOOOOOOXX               ",
+"       XOOOOOXX                 ",
+"        XXXXXX                  ",
+"                                ",
+"                                "
+};

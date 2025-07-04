@@ -6,11 +6,26 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:29:54 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/01 12:05:38 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 17:02:15 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
+
+void	door_toggle(t_meta *meta)
+{
+	t_pixel	*pixel;
+
+	pixel = NULL;
+	meta->ray.dir_x = meta->player.dir_x;
+	meta->ray.dir_y = meta->player.dir_y;
+	dda_logic(meta, 1);
+	pixel = &meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x];
+	if (pixel->value == 'O')
+		pixel->value = 'D';
+	else if (pixel->value == 'D')
+		pixel->value = 'O';
+}
 
 int	key_press(int keysym, t_meta *meta)
 {
@@ -26,6 +41,8 @@ int	key_press(int keysym, t_meta *meta)
 		meta->state.key_r = true;
 	else if (keysym == XK_Left)
 		meta->state.key_l = true;
+	else if (keysym == XK_e)
+		door_toggle(meta);
 	else if (keysym == XK_Escape)
 		terminate(meta);
 	return (0);
@@ -48,24 +65,8 @@ int	key_release(int keysym, t_meta *meta)
 	return (0);
 }
 
-void	rotation(t_meta *meta)
+void	check_state(t_meta *meta, double velocity_x, double velocity_y)
 {
-	if (meta->state.key_r)
-		meta->mini.base_angle += (P_TORQUE * PIE / 180);
-	if (meta->state.key_l)
-		meta->mini.base_angle -= (P_TORQUE * PIE / 180);
-}
-
-void	translate(t_meta *meta)
-{
-	int		offset[2];
-	double	velocity_x;
-	double	velocity_y;
-
-	offset[0] = meta->map.x_offset;
-	offset[1] = meta->map.y_offset;
-	velocity_x = P_SPEED * meta->player.dir_x;
-	velocity_y = P_SPEED * meta->player.dir_y;
 	if (meta->state.key_w)
 	{
 		meta->map.x_offset -= velocity_x;
@@ -86,10 +87,28 @@ void	translate(t_meta *meta)
 		meta->map.x_offset += velocity_y;
 		meta->map.y_offset += -velocity_x;
 	}
+}
+
+void	movement_state(t_meta *meta)
+{
+	int		offset[2];
+	double	velocity_x;
+	double	velocity_y;
+	double	torque;
+
+	offset[0] = meta->map.x_offset;
+	offset[1] = meta->map.y_offset;
+	velocity_x = P_SPEED * meta->player.dir_x * meta->time.delta_time;
+	velocity_y = P_SPEED * meta->player.dir_y * meta->time.delta_time;
+	torque = (P_TORQUE * PIE / 180) * meta->time.delta_time;
+	check_state(meta, velocity_x, velocity_y);
+	if (meta->state.key_r)
+		meta->player.base_angle += torque;
+	if (meta->state.key_l)
+		meta->player.base_angle -= torque;
 	if (!collision_check(meta))
 	{
 		meta->map.x_offset = offset[0];
 		meta->map.y_offset = offset[1];
 	}
-	rotation(meta);
 }

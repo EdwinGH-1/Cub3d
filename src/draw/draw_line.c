@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:32:29 by jothomas          #+#    #+#             */
-/*   Updated: 2025/06/26 17:29:20 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:01:58 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	gradient_less_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 	p = 2 * abs(dy) - abs(dx);
 	while (++i < abs(dx))
 	{
-		if (in_circle(mask.x, mask.y))
+		if (in_circle(mask.x, mask.y, MINI_RAD))
 			my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
 		if (dx > 0)
 			mask.x--;
@@ -73,7 +73,7 @@ static void	gradient_more_than_one(t_meta *meta, t_pixel mask, int dx, int dy)
 	p = 2 * abs(dx) - abs(dy);
 	while (++i < abs(dy))
 	{
-		if (in_circle(mask.x, mask.y))
+		if (in_circle(mask.x, mask.y, MINI_RAD))
 			my_mlx_pixel_put(meta, mask.x, mask.y, RAY_COLOR);
 		if (dy > 0)
 			mask.y--;
@@ -98,10 +98,10 @@ void	draw_line(t_meta *meta)
 	int		dx;
 	int		dy;
 
-	dx = meta->mini.ray_x - meta->mini.centre_x;
-	dy = meta->mini.ray_y - meta->mini.centre_y;
-	mask.x = meta->mini.centre_x;
-	mask.y = meta->mini.centre_y;
+	dx = meta->ray.pos_x - (MINI_POS + MINI_RAD);
+	dy = meta->ray.pos_y - (MINI_POS + MINI_RAD);
+	mask.x = MINI_POS + MINI_RAD;
+	mask.y = MINI_POS + MINI_RAD;
 	if (abs(dx) > abs(dy))
 		gradient_less_than_one(meta, mask, dx, dy);
 	else

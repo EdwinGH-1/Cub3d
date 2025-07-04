@@ -3,17 +3,17 @@ NAME_LIBFT = libft
 NAME_MINILIBX = minilibx-linux
 SRCDIR = src/
 OBJDIR = objs/
-SRCS_FILL = cub3d.c draw/draw_line.c draw/draw_map.c draw/draw_ray.c \
+SRCS_FILL = cub3d.c draw/draw_line.c draw/draw_map.c \
 			parse/parse.c parse/parse_utils.c parse/parse_texture.c parse/parse_error.c\
 			hook/hook.c hook/hook_key.c \
-			raycast/raycast.c
+			raycast/raycast.c raycast/draw_ray.c raycast/ray_utils.c
 SRCS = $(addprefix $(SRCDIR), $(SRCS_FILL))
 OBJS = $(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(SRCS))
 MINILIBX = $(NAME_MINILIBX)/libmlx_Linux.a
 LIBFT = $(NAME_LIBFT)/libft.a
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -O3
 2FLAGS = -Lminilibx-linux -lmlx_Linux -lXext -lX11 -lm -lz -lXrandr -lXrender -lbsd
 RM = rm -rf
 

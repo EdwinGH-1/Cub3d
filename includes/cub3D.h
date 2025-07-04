@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/03 12:49:37 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:50:38 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <limits.h>
 # include <errno.h>
 # include <X11/keysym.h>
+# include <sys/time.h>
 # include <stdbool.h>
 # include "../minilibx-linux/mlx.h"
 # include "../libft/includes/libft.h"
@@ -39,12 +40,12 @@
 # define P_COLOR 0xFF0000
 # define P_SIZE 8
 # define P_FOV 66
-# define P_SPEED 5
-# define P_TORQUE 4
+# define P_SPEED 70
+# define P_TORQUE 70
 
 # define RAY_N 120
 # define RAY_COLOR 0x800080
-# define TILE_SIZE 60
+# define TILE_SIZE 30
 
 # define NO 0
 # define SO 1
@@ -53,6 +54,7 @@
 # define DO 4
 # define F 5
 # define C 6
+# define GU 7
 //-----------------------------CUB3D STRUCTURES--------------------------------
 
 //---------PARSING STRUCT
@@ -88,13 +90,13 @@ typedef struct s_texture
 typedef struct s_map
 {
 	t_pixel			**pixel;
-	t_texture		texture[5];
+	t_texture		texture[6];
 	unsigned int	floor;
 	unsigned int	ceiling;
 	int				x_max;
 	int				y_max;
-	int				x_tex;
-	int				y_tex;
+	double			x_tex;
+	double			y_tex;
 	double			x_offset;
 	double			y_offset;
 }	t_map;
@@ -108,6 +110,7 @@ typedef struct s_state
 	bool	key_d;
 	bool	key_r;
 	bool	key_l;
+	bool	key_door;
 }	t_state;
 
 // World position
@@ -117,8 +120,7 @@ typedef struct s_player
 	double	pos_y;
 	double	dir_x;
 	double	dir_y;
-	double	plane_x;
-	double	plane_y;
+	double	base_angle;
 }	t_player;
 
 //---------RAYCASTING STRUCT
@@ -128,7 +130,9 @@ typedef struct s_ray
 	double	pos_y;
 	double	dir_x;
 	double	dir_y;
+	double	raw_dist;
 	double	perp_dist;
+	double	line_h;
 	double	dist_x;
 	double	dist_y;
 	double	delta_x;
@@ -139,17 +143,6 @@ typedef struct s_ray
 	int		step_y;
 	int		side;
 }	t_ray;
-
-// Map position
-typedef struct s_mini
-{
-	double	centre_x;
-	double	centre_y;
-	double	ray_x;
-	double	ray_y;
-	double	base_angle;
-	double	angle_shift;
-}	t_mini;
 
 typedef struct s_time
 {
@@ -176,7 +169,6 @@ typedef struct s_meta
 	t_utils		parse;
 	t_bitmap	bitmap;
 	t_map		map;
-	t_mini		mini;
 	t_player	player;
 	t_state		state;
 	t_ray		ray;
@@ -211,16 +203,12 @@ bool			collision_check(t_meta *meta);
 //	hook_key.c
 int				key_press(int keysym, t_meta *meta);
 int				key_release(int keysym, t_meta *meta);
-void			translate(t_meta *meta);
+void			movement_state(t_meta *meta);
 
 //		DRAW
 //	draw_map.c
-bool			in_circle(int x, int y);
+bool			in_circle(int x, int y, int r);
 void			render_minimap(t_meta *meta);
-
-//	draw_ray.c
-void			draw_map_ray(t_meta *meta);
-void			raycast(t_meta *meta);
 
 //	draw_line.c
 void			draw_line(t_meta *meta);
@@ -230,6 +218,16 @@ unsigned int	get_pixel(t_meta *meta, int x, int y);
 
 //		RAYCAST
 //	raycast.c
-void			dda_logic(t_meta *meta);
+void			dda_logic(t_meta *meta, int state);
+
+//	draw_ray.c
+void			draw_map_ray(t_meta *meta);
+void			raycast(t_meta *meta);
+
+//	ray_utils.c
+int				texture_index(t_meta *meta);
+unsigned int	texture_color(t_meta *meta, t_texture tex, double *step);
+void			texture_coord(t_meta *meta, t_texture *texture);
+void			texture_bounds(t_meta *meta, double *start, double *end);
 
 #endif // !CUB3D_H

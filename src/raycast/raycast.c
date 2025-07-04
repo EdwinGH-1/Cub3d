@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:54:01 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/03 11:49:33 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:30:37 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,33 +40,31 @@ void	init_dda(t_meta *meta)
 			/ fabs(meta->ray.dir_y);
 }
 
-void	dda_logic(t_meta *meta)
+void	dda_logic(t_meta *meta, int state)
 {
 	init_dda(meta);
 	while (1)
 	{
 		if (meta->ray.dist_x < meta->ray.dist_y)
 		{
-			meta->ray.perp_dist = meta->ray.dist_x;
+			meta->ray.raw_dist = meta->ray.dist_x;
 			meta->ray.dist_x += meta->ray.delta_x;
 			meta->ray.grid_x += meta->ray.step_x;
 			meta->ray.side = 0;
 		}
 		else
 		{
-			meta->ray.perp_dist = meta->ray.dist_y;
+			meta->ray.raw_dist = meta->ray.dist_y;
 			meta->ray.dist_y += meta->ray.delta_y;
 			meta->ray.grid_y += meta->ray.step_y;
 			meta->ray.side = 1;
 		}
 		if (meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x].value == 1
-			|| meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x].value == -1)
+			|| meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x].value == -1
+			|| meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x].value == 'D')
+			break ;
+		if (state == 1
+			&& meta->map.pixel[meta->ray.grid_y][meta->ray.grid_x].value == 'O')
 			break ;
 	}
-	meta->ray.pos_x = meta->player.pos_x
-		- (meta->ray.perp_dist * meta->ray.dir_x);
-	meta->ray.pos_y = meta->player.pos_y
-		- (meta->ray.perp_dist * meta->ray.dir_y);
-	meta->ray.perp_dist *= (meta->player.dir_x * meta->ray.dir_x
-			+ meta->player.dir_y * meta->ray.dir_y);
 }

@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 09:46:24 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/03 12:36:41 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:57:50 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,30 @@
 
 void	init_render(t_meta *meta)
 {
-	t_texture	*tex;
-	int			index;
+	t_texture		*tex;
+	struct timeval	tv;
+	int				index;
+	int				fd;
 
-	meta->player.pos_x = MINI_POS + MINI_RAD - meta->map.x_offset;
-	meta->player.pos_y = MINI_POS + MINI_RAD - meta->map.y_offset;
-	meta->mini.centre_x = MINI_POS + MINI_RAD;
-	meta->mini.centre_y = MINI_POS + MINI_RAD;
-	meta->mini.angle_shift = (P_FOV * PIE / 180) / RAY_N;
 	index = -1;
 	tex = NULL;
-	while (++index <= DO && meta->parse.textures[index])
+	index = open("./gun.xpm", O_RDONLY);
+	while (++index <= DO + 1 && meta->parse.textures[index])
 	{
 		tex = &meta->map.texture[index];
+		if (index == DO + 1)
+		{
+			if (index < 0)
+				break ;
+			tex->path = ft_strdup("./gun.xpm");
+		}
 		tex->img = mlx_xpm_file_to_image(meta->mlx,
 				tex->path, &tex->width, &tex->height);
 		tex->addr = mlx_get_data_addr(tex->img,
 				&tex->bpp, &tex->line_length, &tex->endian);
 	}
+	gettimeofday(&tv, NULL);
+	meta->time.current_frame = tv.tv_sec + tv.tv_usec * 1e-9;
 }
 
 int	main(int argc, char **argv)
