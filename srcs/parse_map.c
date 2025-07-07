@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:05:39 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 21:03:49 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 15:48:53 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	get_map_values_row(t_map *map, char *str, int y)
 			map->point[y][x].value = str[x];
 		map->point[y][x].x = x;
 		map->point[y][x].y = y;
+		map->point[y][x].visited = false;
 		x++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:59:27 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/26 18:15:01 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 15:29:00 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ void	parse_map(t_vars *vars, char *file)
 	parse_map_size(vars, &vars->map, file);
 	init_map_points(vars, &vars->map);
 	parse_map_values(vars, &vars->map, file);
-	if (is_valid_map_row(&vars->map) == false
-		|| is_valid_map_col(&vars->map) == false
-		|| is_valid_player(&vars->map) == false)
+	if (is_valid_player(&vars->map) == false
+		|| is_valid_map(&vars->map) == false)
 	{
 		ft_putstr_fd("Error\nInvalid map\n", 2);
 		delete_and_free_vars(vars);

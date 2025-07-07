@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/02 14:29:24 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 15:57:57 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,10 @@ typedef struct s_img
 
 typedef struct s_point
 {
-	int	x;
-	int	y;
-	int	value;
+	int		x;
+	int		y;
+	int		value;
+	bool	visited;
 }	t_point;
 
 typedef struct s_tex_img
@@ -300,8 +301,9 @@ void	parse_map_values(t_vars *vars, t_map *map, char *file);
 void	parse_map_size(t_vars *vars, t_map *map, char *file);
 
 // parse_map_utils.c
-bool	is_valid_map_row(t_map *map);
-bool	is_valid_map_col(t_map *map);
+// bool	is_valid_map_row(t_map *map);
+// bool	is_valid_map_col(t_map *map);
+bool	is_valid_map(t_map *map);
 bool	is_valid_player(t_map *map);
 bool	is_map(char *str);
 void	init_map_points(t_vars *vars, t_map *map);

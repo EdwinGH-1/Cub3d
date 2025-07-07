@@ -6,65 +6,66 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:14:33 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/03 18:53:05 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 15:57:41 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-bool	is_valid_map_row(t_map *map)
+void	flood_fill(t_map *map, int x, int y, int *is_err)
 {
+	int	value;
+
+	if (*is_err == 1)
+		return ;
+	if (x < 0 || x >= map->x_max || y < 0 || y >= map->y_max)
+	{
+		*is_err = 1;
+		return ;
+	}
+	value = map->point[y][x].value;
+	if (value == 1 || map->point[y][x].visited == true)
+		return ;
+	if (value == 'O' || value == 'D' || value == 0 || value == 'N'
+		|| value == 'S' || value == 'E' || value == 'W')
+		map->point[y][x].visited = true;
+	else
+	{
+		*is_err = 1;
+		return ;
+	}
+	flood_fill(map, x - 1, y, is_err);
+	flood_fill(map, x + 1, y, is_err);
+	flood_fill(map, x, y - 1, is_err);
+	flood_fill(map, x, y + 1, is_err);
+}
+
+bool	is_valid_map(t_map *map)
+{
+	int	x;
 	int	y;
-	int	x1;
-	int	x2;
+	int	is_err;
 
 	y = 0;
 	while (y < map->y_max)
 	{
-		x1 = 0;
-		x2 = map->x_max - 1;
-		while (map->point[y][x1].value == -1)
-			x1++;
-		while (map->point[y][x2].value == -1)
-			x2--;
-		if (map->point[y][x1].value != 1 || map->point[y][x2].value != 1)
-			return (false);
-		if (y == 0 || y == map->y_max - 1)
+		x = 0;
+		while (x < map->x_max)
 		{
-			while (++x1 < x2)
-				if (map->point[y][x1].value == 0)
-					return (false);
+			if (map->point[y][x].value == 'N'
+				|| map->point[y][x].value == 'S'
+				|| map->point[y][x].value == 'W'
+				|| map->point[y][x].value == 'E')
+			{
+				flood_fill(map, x, y, &is_err);
+				break ;
+			}
+			x++;
 		}
 		y++;
 	}
-	return (true);
-}
-
-bool	is_valid_map_col(t_map *map)
-{
-	int	x;
-	int	y1;
-	int	y2;
-
-	x = 0;
-	while (x < map->x_max)
-	{
-		y1 = 0;
-		y2 = map->y_max - 1;
-		while (map->point[y1][x].value == -1)
-			y1++;
-		while (map->point[y2][x].value == -1)
-			y2--;
-		if (map->point[y1][x].value != 1 || map->point[y2][x].value != 1)
-			return (false);
-		if (x == 0 || x == map->x_max - 1)
-		{
-			while (++y1 < y2)
-				if (map->point[y1][x].value == 0)
-					return (false);
-		}
-		x++;
-	}
+	if (is_err == 1)
+		return (false);
 	return (true);
 }
 
