@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:51:35 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/04 16:31:18 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/07 10:14:11 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	draw_map_ray(t_meta *meta)
 	double	shift;
 	int		i;
 
-	angle = meta->player.base_angle - (P_FOV * PIE / 180 / 2);
-	shift = (P_FOV * PIE / 180) / RAY_N;
+	angle = meta->player.base_angle - (P_FOV * PIE / 180.0 / 2.0);
+	shift = (P_FOV * PIE / 180.0) / RAY_N;
 	i = -1;
 	while (++i <= RAY_N)
 	{
@@ -27,9 +27,9 @@ void	draw_map_ray(t_meta *meta)
 		meta->ray.dir_y = sin(angle);
 		dda_logic(meta, 0);
 		meta->ray.pos_x = meta->player.pos_x
-			- (meta->ray.raw_dist * meta->ray.dir_x) + meta->map.x_offset;
+			- (meta->ray.perp_dist * meta->ray.dir_x) + meta->map.x_offset;
 		meta->ray.pos_y = meta->player.pos_y
-			- (meta->ray.raw_dist * meta->ray.dir_y) + meta->map.y_offset;
+			- (meta->ray.perp_dist * meta->ray.dir_y) + meta->map.y_offset;
 		draw_line(meta);
 		angle += shift;
 	}
@@ -74,8 +74,7 @@ void	raycast(t_meta *meta)
 		meta->ray.dir_x = cos(angle);
 		meta->ray.dir_y = sin(angle);
 		dda_logic(meta, 0);
-		meta->ray.perp_dist = meta->ray.raw_dist
-			* (meta->player.dir_x * meta->ray.dir_x
+		meta->ray.perp_dist *= (meta->player.dir_x * meta->ray.dir_x
 				+ meta->player.dir_y * meta->ray.dir_y);
 		meta->ray.pos_x = (meta->player.pos_x
 				+ (meta->ray.perp_dist * meta->ray.dir_x))

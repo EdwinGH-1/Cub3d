@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:37:18 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/04 16:59:15 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/07 11:50:12 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 int	terminate(t_meta *meta)
 {
+	int	i;
+
+	i = -1;
+	while (++i <= DO && meta->parse.textures[i])
+		mlx_destroy_image(meta->mlx, meta->map.texture[i].img);
 	free_texture(meta);
 	memfree_array((void **)meta->map.pixel);
 	mlx_destroy_image(meta->mlx, meta->bitmap.img);
@@ -77,16 +82,14 @@ void	prep_render(t_meta *meta)
 	meta->time.fps = 1 / meta->time.delta_time;
 }
 
-int	render_image(void *data)
+int	render_image(t_meta *meta)
 {
-	t_meta	*meta;
-
-	meta = (t_meta *)data;
 	ft_bzero(meta->bitmap.addr, WINY * meta->bitmap.line_length);
 	movement_state(meta);
 	prep_render(meta);
 	raycast(meta);
 	render_minimap(meta);
+	animation(meta);
 	mlx_put_image_to_window(meta->mlx, meta->win, meta->bitmap.img, 0, 0);
 	return (0);
 }

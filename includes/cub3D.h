@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:49:42 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/04 18:50:38 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:34:14 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 # define P_FOV 66
 # define P_SPEED 70
 # define P_TORQUE 70
+# define P_PRECISION 0.01
 
 # define RAY_N 120
 # define RAY_COLOR 0x800080
@@ -91,6 +92,7 @@ typedef struct s_map
 {
 	t_pixel			**pixel;
 	t_texture		texture[6];
+	t_texture		sprite;
 	unsigned int	floor;
 	unsigned int	ceiling;
 	int				x_max;
@@ -130,7 +132,6 @@ typedef struct s_ray
 	double	pos_y;
 	double	dir_x;
 	double	dir_y;
-	double	raw_dist;
 	double	perp_dist;
 	double	line_h;
 	double	dist_x;
@@ -196,7 +197,7 @@ bool			parse_error(t_meta *meta);
 
 //		HOOK
 //	hook.c
-int				render_image(void *data);
+int				render_image(t_meta *meta);
 int				terminate(t_meta *meta);
 bool			collision_check(t_meta *meta);
 
@@ -204,6 +205,7 @@ bool			collision_check(t_meta *meta);
 int				key_press(int keysym, t_meta *meta);
 int				key_release(int keysym, t_meta *meta);
 void			movement_state(t_meta *meta);
+int				mouse_move(int mx, int my, t_meta *meta);
 
 //		DRAW
 //	draw_map.c
@@ -215,6 +217,9 @@ void			draw_line(t_meta *meta);
 void			my_mlx_pixel_put(t_meta *meta, int x, int y,
 					unsigned int color);
 unsigned int	get_pixel(t_meta *meta, int x, int y);
+
+//	draw_gun.c
+void			animation(t_meta *meta);
 
 //		RAYCAST
 //	raycast.c

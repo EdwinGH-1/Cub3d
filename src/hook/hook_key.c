@@ -6,7 +6,7 @@
 /*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:29:54 by jothomas          #+#    #+#             */
-/*   Updated: 2025/07/04 17:02:15 by jothomas         ###   ########.fr       */
+/*   Updated: 2025/07/07 11:56:18 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,17 @@ void	check_state(t_meta *meta, double velocity_x, double velocity_y)
 		meta->map.x_offset += velocity_y;
 		meta->map.y_offset += -velocity_x;
 	}
+}
+
+int	mouse_move(int mx, int my, t_meta *meta)
+{
+	double	precision;
+
+	(void)my;
+	precision = (mx - WINX / 2) * P_PRECISION * meta->time.delta_time;
+	meta->player.base_angle += precision;
+	mlx_mouse_move(meta->mlx, meta->win, WINX / 2, WINY / 2);
+	return (0);
 }
 
 void	movement_state(t_meta *meta)
