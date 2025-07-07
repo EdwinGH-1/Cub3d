@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:14:33 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/07 15:57:41 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 17:13:48 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ bool	is_valid_map(t_map *map)
 		x = 0;
 		while (x < map->x_max)
 		{
-			if (map->point[y][x].value == 'N'
-				|| map->point[y][x].value == 'S'
+			if (map->point[y][x].value == 'N' || map->point[y][x].value == 'S'
 				|| map->point[y][x].value == 'W'
 				|| map->point[y][x].value == 'E')
 			{
@@ -64,9 +63,10 @@ bool	is_valid_map(t_map *map)
 		}
 		y++;
 	}
-	if (is_err == 1)
-		return (false);
-	return (true);
+	if (is_err == 0)
+		return (true);
+	ft_putstr_fd("Error\nInvalid map\n", 2);
+	return (false);
 }
 
 bool	is_valid_player(t_map *map)
@@ -93,6 +93,7 @@ bool	is_valid_player(t_map *map)
 	}
 	if (player_count == 1)
 		return (true);
+	ft_putstr_fd("Error\nInvalid player count\n", 2);
 	return (false);
 }
 
