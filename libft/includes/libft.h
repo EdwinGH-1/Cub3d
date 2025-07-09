@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*   By: jothomas <jothomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 12:27:07 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/10 14:12:00 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/18 08:57:31 by jothomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "./get_next_line.h"
+# include "./printf.h"
 
 // typedef struct s_list
 // {
@@ -25,6 +27,7 @@
 // }					t_list;
 
 int		ft_atoi(const char *nptr);
+int		ft_atoi_base(const char *nptr, int base);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 int		ft_isalnum(int c);
